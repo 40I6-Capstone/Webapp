@@ -39,16 +39,17 @@ const items: MenuProps['items'] = [
   },
   {
     key: 'singleUGV',
-    label: (<Link to='/ugv/path'>SingleUgv</Link>),
+    label: (<Link to='/ugv/state'>SingleUgv</Link>),
     icon: (<SubnodeOutlined />),
   }
 ]
 
 function App() {
+
+  const location = useLocation();
     
   const [socketUrl, setSocketUrl] = useState('ws://127.0.0.1:63733');
   const [messageHistory, setMessageHistory] = useState<any[]>([]);
-  const location = useLocation();
 
   const { sendMessage, lastMessage, readyState } = useWebSocket(socketUrl);
 
@@ -77,7 +78,7 @@ function App() {
             <Routes>
               <Route path='/' element={<MainPage sendMessage={sendMessage}/>}/>
               <Route path='ugv' element={<SingleUGVMenu sendMessage={sendMessage}/>}>
-                <Route path='path' element={<SingleUGVPage/>}/>
+                <Route path='state' element={<SingleUGVPage/>}/>
                 <Route path='diag/vel' element={<UGVMotorVel/>}/>
                 <Route path='diag/dist' element={<UGVMotorDist/>}/>
               </Route>

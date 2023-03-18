@@ -1,5 +1,5 @@
 import React, { useState, useCallback } from 'react';
-import { Outlet, Link} from 'react-router-dom';
+import { Outlet, Link, useLocation} from 'react-router-dom';
 import { useAppSelector, useAppDispatch } from '../../app/hooks';
 
 import { Layout, Menu, Row, Space, Button, Select, MenuProps } from 'antd';
@@ -21,8 +21,8 @@ interface ugvOption {
 
 const items: MenuProps['items'] = [
   {
-    key: "status",
-    label: (<Link to='/UGV/path'>UGV Status</Link>),
+    key: "state",
+    label: (<Link to='/UGV/state'>UGV State</Link>),
     icon: (<AimOutlined />),
   },
   {
@@ -31,7 +31,7 @@ const items: MenuProps['items'] = [
     // icon: (<HeartOutlined />),
     children: [
       {
-        key: "velocity",
+        key: "vel",
         label: (<Link to="/ugv/diag/vel">Velocity</Link>),
         icon: (<DashboardOutlined />)
       },
@@ -45,8 +45,16 @@ const items: MenuProps['items'] = [
   }
 ];
 
+function getLocationKey(path: string){
+  const pathArr = path.split('/');
+  return [pathArr[pathArr.length -1]];
+}
+
 export function SingleUGVMenu(props:mainPageProps) {
   const { sendMessage } = props;
+
+  const location = useLocation();
+
   const [ugvId, setUgvId] = useState<number>();
   const [options, setOptions] = useState<ugvOption[]>([{value: 0, label: "UGV 0"}, {value: 1, label: "UGV 1"}]);
   const [isSettingsOpen, setIsSettingsOpen] = React.useState(false);
@@ -65,7 +73,7 @@ export function SingleUGVMenu(props:mainPageProps) {
   return (
     <Layout>
       <Layout.Sider collapsible defaultCollapsed={true}>
-        <Menu mode='inline' items={items}/>
+        <Menu mode='inline' items={items} defaultSelectedKeys={getLocationKey(location.pathname)}/>
       </Layout.Sider>
       <Layout.Content>
         <Row style={{padding: '20px'}}>

@@ -39,7 +39,7 @@ export function SingleUGVPath(props: Props) {
 
   return (
     <>
-      <Typography.Title style={{margin: '24px 0px 10px 24px'}} level={4}>Path of UGV</Typography.Title>
+      <Typography.Title style={{margin: '24px 0px 0px 24px'}} level={4}>Path of UGV</Typography.Title>
       <Plot
           divId="singlePos"
           data={[
@@ -92,7 +92,7 @@ export function SingleUGVPath(props: Props) {
             xaxis: {title: 'X Position'},
             yaxis: {title: 'Y Position'},
             margin: {
-              t: 0,
+              t: 10,
               r: 20
             }
           }}
