@@ -1,6 +1,7 @@
 import React, { useCallback, useState } from 'react';
 import { useOutletContext } from 'react-router-dom';
-import { Row, Col, Modal, Form, Slider, Checkbox, InputNumber } from 'antd';
+import { Layout, Row, Col, Space, Modal, Form, Slider, Checkbox, InputNumber, Button, Popconfirm, Menu, MenuProps } from 'antd';
+import { SettingOutlined, AimOutlined, HeartOutlined, DashboardOutlined, LineChartOutlined } from '@ant-design/icons'
 
 import SingleUGVPath from './UGVPath';
 import UGVVel from './UGVV';
@@ -13,41 +14,60 @@ interface Values {
   lineSize: number,
   numPointsToSave: number,
 }
+
 export function SingleUGVPage() {
 
-  const [isSettingsOpen, setIsSettingsOpen] = useOutletContext<any>();
+  const [modalVisible, setModalVisible] = useOutletContext<any>();
   const [lineSize, setLineSize] = useState<number>(5);
   const [markerOutline, setMarkerOutline] = useState<boolean>(true);
   const [numPointsToSave, setNumPointsToSave] = useState<number>(15);
 
   const [form] = Form.useForm();
-  console.log(markerOutline);
 
   const onOk = useCallback((e: any) => {
     form.submit();
-    setIsSettingsOpen(false);
+    setModalVisible(false);
   },[form]);
 
   const onCancel = useCallback(() => {
     form.resetFields();
-    setIsSettingsOpen(false);
+    setModalVisible(false);
   },[])
 
   const onSubmit = useCallback((values: Values) => {
-    console.log(values);
     setLineSize(values.lineSize);
     setMarkerOutline(values.markerOutline);
     setNumPointsToSave(values.numPointsToSave);
     form.resetFields();
   }, []);
 
+  const onClearData = useCallback(()=> {
 
+  },[]);
 
   return (
     <>
+      <Row style={{padding: ' 0px 20px'}}>
+        <Space wrap>
+          <Popconfirm
+            title="Confirm Clear"
+            description="only will clear data for this page"
+            onConfirm={onClearData}
+          >
+            <Button>
+              Clear Data
+            </Button>
+          </Popconfirm>
+          <Button>
+              <SettingOutlined onClick={()=>setModalVisible(true)}/>
+          </Button>
+        </Space>
+      </Row>
       <Row className={"stretch-row"}>
         <Col span={12}>
-          <SingleUGVPath lineSize={lineSize} markerOutline={markerOutline} />
+          <Row className={"stretch-row"}> 
+            <SingleUGVPath lineSize={lineSize} markerOutline={markerOutline} />
+          </Row>
         </Col>
         <Col span={12} className={"fill-col"}>
           <Row className={"stretch-row"}>
@@ -58,7 +78,7 @@ export function SingleUGVPage() {
           </Row>
         </Col>
       </Row>
-      <Modal title="Path Plot Settings" open={isSettingsOpen} onOk={onOk} onCancel={onCancel}>
+      <Modal title="Path Plot Settings" open={modalVisible} onOk={onOk} onCancel={onCancel}>
         <Form form={form} onFinish={onSubmit}>
           <Form.Item name="markerOutline" label="Add outline to symbols" valuePropName="checked" initialValue={markerOutline}>
             <Checkbox />
