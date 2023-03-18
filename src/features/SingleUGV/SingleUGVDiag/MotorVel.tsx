@@ -1,11 +1,11 @@
 import React, { useState } from 'react';
 import Plot from 'react-plotly.js';
-import { useAppSelector, useAppDispatch } from '../../app/hooks';
+import { useAppSelector, useAppDispatch } from '../../../app/hooks';
 
 
 import { Row, Col } from 'antd';
 
-export function UGVMotorDist() {
+export function UGVMotorVel() {
 
   return (
     <>
@@ -16,7 +16,7 @@ export function UGVMotorDist() {
               {
                 type: 'scatter',
                 mode: 'lines',
-                name: 'Average',
+                name: 'Average Velocity',
                 x: [1.1, 2.3, 2.9],
                 y: [2.01, 5.8, 3.1],
                 line: {
@@ -53,7 +53,7 @@ export function UGVMotorDist() {
               plot_bgcolor: 'rgba(0,0,0,0)',
               font: {color:'white'},
               xaxis: {title: 'Time (s)'},
-              yaxis: {title: 'Distance (m)'},          
+              yaxis: {title: 'Velocity (m/s)'},          
             }}
             useResizeHandler={true}
         />
@@ -62,4 +62,4 @@ export function UGVMotorDist() {
   );
 }
 
-export default(UGVMotorDist);
+export default(UGVMotorVel);

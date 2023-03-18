@@ -5,11 +5,11 @@ import { useAppSelector, useAppDispatch } from '../../app/hooks';
 interface Props {
   lineSize: number;
 }
-export function UGVVel(props: Props) {
+export function UGVHead(props: Props) {
   const { lineSize } = props;
   return (
     <Plot
-        divId="singleUGVVelocity"
+        divId="singleUGVHeading"
         data={[
             {
                 type: 'scatter',
@@ -51,5 +51,5 @@ export function UGVVel(props: Props) {
   );
 }
 
-export default(UGVVel);
+export default(UGVHead);
 

@@ -2,8 +2,13 @@ import React, { useState } from 'react';
 import Plot from 'react-plotly.js';
 import { useAppSelector, useAppDispatch } from '../../app/hooks';
 
-export function SingleUGVPath() {
-  
+interface Props {
+  lineSize: number;
+  markerOutline: boolean;
+}
+export function SingleUGVPath(props: Props) {
+  const { lineSize, markerOutline } = props;
+  console.log(markerOutline);
   return (
     <Plot
         divId="singlePos"
@@ -16,15 +21,15 @@ export function SingleUGVPath() {
                 y: [2, 6, 3],
                 line: {
                   color: 'rgb(100, 0, 0)',
-                  width: 5
+                  width: lineSize
                 },
                 marker: {
                   color: ['blue', 'red', 'green'],
-                  size: 15,
+                  size: lineSize+10,
                   symbol: 'cross',
                   line:{
                     color: 'white',
-                    width: 2,
+                    width: markerOutline?lineSize/2:0,
                   }
                 }
             },
@@ -36,7 +41,7 @@ export function SingleUGVPath() {
               y: [2.01, 5.8, 3.1],
               line: {
                 color: 'rgb(0, 0, 255)',
-                width: 5
+                width: lineSize
               },
           },
         ]}
