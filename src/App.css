@@ -6,3 +6,10 @@
   flex-direction: column;
 }
 
+.ant-layout-content{
+  display: flex;
+  flex-direction: column; 
+   
+}
+
+

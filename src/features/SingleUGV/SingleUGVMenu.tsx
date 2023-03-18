@@ -1,9 +1,9 @@
 import React, { useState, useCallback } from 'react';
-import { Outlet } from 'react-router-dom';
+import { Outlet, Link} from 'react-router-dom';
 import { useAppSelector, useAppDispatch } from '../../app/hooks';
 
-import { Row, Space, Button, Select } from 'antd';
-import { SettingOutlined } from '@ant-design/icons'
+import { Layout, Menu, Row, Space, Button, Select, MenuProps } from 'antd';
+import { SettingOutlined, AimOutlined, HeartOutlined, DashboardOutlined, LineChartOutlined } from '@ant-design/icons'
 import { SendMessage } from 'react-use-websocket/dist/lib/types';
 
 import SingleUGVPath from './UGVPath';
@@ -19,6 +19,31 @@ interface ugvOption {
   label: string,
 }
 
+const items: MenuProps['items'] = [
+  {
+    key: "status",
+    label: (<Link to='/UGV/path'>UGV Status</Link>),
+    icon: (<AimOutlined />),
+  },
+  {
+    key: "diag",
+    label: "Motor Diagnostics",
+    // icon: (<HeartOutlined />),
+    children: [
+      {
+        key: "velocity",
+        label: (<Link to="/ugv/diag/vel">Velocity</Link>),
+        icon: (<DashboardOutlined />)
+      },
+      {
+        key: "dist",
+        label: (<Link to="/ugv/diag/dist">Distance</Link>),
+        icon: (<LineChartOutlined/>)
+      },
+    ],
+    type: 'group'
+  }
+];
 
 export function SingleUGVMenu(props:mainPageProps) {
   const { sendMessage } = props;
@@ -35,27 +60,26 @@ export function SingleUGVMenu(props:mainPageProps) {
     setUgvId(value);
   },[setUgvId]);
 
-  const showSettings = () => {
-    setIsSettingsOpen(true);
-  };
+
 
   return (
-    <>
-      <Row style={{padding: '20px'}}>
-        <Space wrap>
-          <Button type="primary" onClick={onUGVGoClick}>Start UGV</Button>
-
-          <Select
-            onChange={onSelect}
-            options={options}
-          />
-          <Button>
-            <SettingOutlined onClick={showSettings}/>
-          </Button>
-        </Space>
-      </Row>
-      <Outlet context={[isSettingsOpen, setIsSettingsOpen]}/>
-    </>
+    <Layout>
+      <Layout.Sider collapsible>
+        <Menu mode='inline' items={items}/>
+      </Layout.Sider>
+      <Layout.Content>
+        <Row style={{padding: '20px'}}>
+          <Space wrap>
+            <Select
+              onChange={onSelect}
+              options={options}
+            />
+            <Button type="primary" onClick={onUGVGoClick}>Start UGV</Button>
+          </Space>
+        </Row>
+        <Outlet context={[isSettingsOpen, setIsSettingsOpen]}/>
+      </Layout.Content>
+    </Layout>
   );
 }
 
