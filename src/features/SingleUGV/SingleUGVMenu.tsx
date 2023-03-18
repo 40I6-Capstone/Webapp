@@ -64,7 +64,7 @@ export function SingleUGVMenu(props:mainPageProps) {
 
   return (
     <Layout>
-      <Layout.Sider collapsible>
+      <Layout.Sider collapsible defaultCollapsed={true}>
         <Menu mode='inline' items={items}/>
       </Layout.Sider>
       <Layout.Content>
