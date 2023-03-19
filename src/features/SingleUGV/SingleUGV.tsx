@@ -1,13 +1,15 @@
 import React, { useCallback, useState } from 'react';
-import { useOutletContext } from 'react-router-dom';
-import { Layout, Row, Col, Space, Modal, Form, Slider, Checkbox, InputNumber, Button, Popconfirm, Menu, MenuProps } from 'antd';
-import { SettingOutlined, AimOutlined, HeartOutlined, DashboardOutlined, LineChartOutlined } from '@ant-design/icons'
+import { Row, Col, Space, Modal, Form, Slider, Checkbox, InputNumber, Button, Popconfirm } from 'antd';
+import { SettingOutlined } from '@ant-design/icons'
 
+import { clearDataState, setNumOfState } from './singleUGVSlice';
+import { selectNumOfStates } from './singleUGVSelector';
 import SingleUGVPath from './UGVPath';
 import UGVVel from './UGVV';
 import UGVHead from './UGVH';
 
 import './SingleUGV.css';
+import { useAppDispatch, useAppSelector } from '../../app/hooks';
 
 interface Values {
   markerOutline: boolean,
@@ -17,10 +19,13 @@ interface Values {
 
 export function SingleUGVPage() {
 
-  const [modalVisible, setModalVisible] = useOutletContext<any>();
+  const dispatch = useAppDispatch();
+
+  const numPointsToSave = useAppSelector(selectNumOfStates); 
+  const [modalVisible, setModalVisible] = useState<boolean>(false);
   const [lineSize, setLineSize] = useState<number>(5);
   const [markerOutline, setMarkerOutline] = useState<boolean>(true);
-  const [numPointsToSave, setNumPointsToSave] = useState<number>(15);
+  // const [numPointsToSave, setNumPointsToSave] = useState<number>(15);
 
   const [form] = Form.useForm();
 
@@ -30,19 +35,18 @@ export function SingleUGVPage() {
   },[form]);
 
   const onCancel = useCallback(() => {
-    form.resetFields();
     setModalVisible(false);
+    form.resetFields();
   },[])
 
   const onSubmit = useCallback((values: Values) => {
     setLineSize(values.lineSize);
     setMarkerOutline(values.markerOutline);
-    setNumPointsToSave(values.numPointsToSave);
-    form.resetFields();
+    dispatch(setNumOfState(values.numPointsToSave));
   }, []);
 
   const onClearData = useCallback(()=> {
-
+    dispatch(clearDataState());
   },[]);
 
   return (
@@ -58,8 +62,8 @@ export function SingleUGVPage() {
               Clear Data
             </Button>
           </Popconfirm>
-          <Button>
-              <SettingOutlined onClick={()=>setModalVisible(true)}/>
+          <Button onClick={()=>setModalVisible(true)}>
+              <SettingOutlined />
           </Button>
         </Space>
       </Row>

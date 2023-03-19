@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { useOutletContext } from 'react-router-dom';
 import Plot from 'react-plotly.js';
 import { useAppSelector, useAppDispatch } from '../../../app/hooks';
 
@@ -6,6 +7,7 @@ import { useAppSelector, useAppDispatch } from '../../../app/hooks';
 import { Row, Col, Typography } from 'antd';
 
 export function UGVMotorDist() {
+  const lineSize = useOutletContext<number>();
 
   return (
     <>
@@ -23,7 +25,7 @@ export function UGVMotorDist() {
                   y: [2.01, 5.8, 3.1],
                   line: {
                     color: 'rgb(255, 255, 255)',
-                    width: 5
+                    width: lineSize
                   },
                 },
                 {
@@ -34,7 +36,7 @@ export function UGVMotorDist() {
                     y: [2, 6, 3],
                     line: {
                       color: 'rgb(255, 0, 0)',
-                      width: 5
+                      width: lineSize
                     },
                 },
                 {
@@ -45,7 +47,7 @@ export function UGVMotorDist() {
                   y: [2.01, 5.8, 3.1],
                   line: {
                     color: 'rgb(0, 255, 255)',
-                    width: 5
+                    width: lineSize
                   },
                 },
               ]}

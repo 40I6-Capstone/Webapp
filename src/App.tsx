@@ -5,6 +5,7 @@ import useWebSocket from 'react-use-websocket';
 import MainPage from './features/MainPage/MainPage';
 import SingleUGVMenu from './features/SingleUGV/SingleUGVMenu';
 import SingleUGVPage from './features/SingleUGV/SingleUGV';
+import UGVMotorDiag from './features/SingleUGV/SingleUGVDiag/MotorDiag';
 import UGVMotorVel from './features/SingleUGV/SingleUGVDiag/MotorVel';
 import UGVMotorDist from './features/SingleUGV/SingleUGVDiag/MotorDist';
 import { handleMessage } from './AppSlice';
@@ -119,8 +120,10 @@ function App() {
                 <Route path='/' element={<MainPage />}/>
                 <Route path='ugv' element={<SingleUGVMenu />}>
                   <Route path='state' element={<SingleUGVPage/>}/>
-                  <Route path='diag/vel' element={<UGVMotorVel/>}/>
-                  <Route path='diag/dist' element={<UGVMotorDist/>}/>
+                  <Route path='diag' element={<UGVMotorDiag />}>
+                    <Route path='vel' element={<UGVMotorVel/>}/>
+                    <Route path='dist' element={<UGVMotorDist/>}/>
+                  </Route>
                 </Route>
               </Routes>
             </WebSocketProvider>

@@ -2,12 +2,18 @@ import React, { useState } from 'react';
 import Plot from 'react-plotly.js';
 import { Typography } from 'antd';
 import { useAppSelector, useAppDispatch } from '../../app/hooks';
+import { selectUGVT,selectUGVH, selectUGVHExp } from './singleUGVSelector';
 
 interface Props {
   lineSize: number;
 }
 export function UGVHead(props: Props) {
   const { lineSize } = props;
+
+  const h = useAppSelector(selectUGVH);
+  const h_exp = useAppSelector(selectUGVHExp);
+  const t = useAppSelector(selectUGVT)
+
   return (
     <>
       <Typography.Title style={{marginBottom: '0px'}} level={4}>Heading of UGV</Typography.Title>
@@ -18,8 +24,8 @@ export function UGVHead(props: Props) {
                   type: 'scatter',
                   mode: 'lines+markers',
                   name:'Expected',
-                  x: [1, 2, 3],
-                  y: [2, 6, 3],
+                  x: t,
+                  y: h_exp,
                   line: {
                     color: 'rgb(255, 0, 0)',
                     width: lineSize
@@ -29,8 +35,8 @@ export function UGVHead(props: Props) {
                 type: 'scatter',
                 mode: 'lines',
                 name: 'Actual',
-                x: [1.1, 2.3, 2.9],
-                y: [2.01, 5.8, 3.1],
+                x: t,
+                y: h,
                 line: {
                   color: 'rgb(0, 255, 255)',
                   width: lineSize
@@ -42,7 +48,7 @@ export function UGVHead(props: Props) {
             paper_bgcolor: 'rgba(0,0,0,0)',
             plot_bgcolor: 'rgba(0,0,0,0)',
             font: {color:'white'},
-            xaxis: {title: 'Time (s)'},
+            xaxis: {title: 'Time (ms)'},
             yaxis: {title: 'Heading (deg)'},   
             margin:{
               t: 0,

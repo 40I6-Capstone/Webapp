@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import Plot from 'react-plotly.js';
 import { Typography } from 'antd';
+import { selectUGVX, selectUGVXExp, selectUGVY, selectUGVyExp } from './singleUGVSelector';
 import { useAppSelector, useAppDispatch } from '../../app/hooks';
 
 interface Props {
@@ -37,6 +38,11 @@ function getActMarkerColours(numOfPoints: number):string[] {
 export function SingleUGVPath(props: Props) {
   const { lineSize, markerOutline } = props;
 
+  const x = useAppSelector(selectUGVX);
+  const y = useAppSelector(selectUGVY);
+  const x_exp = useAppSelector(selectUGVXExp);
+  const y_exp = useAppSelector(selectUGVyExp);
+
   return (
     <>
       <Typography.Title style={{margin: '24px 0px 0px 24px'}} level={4}>Path of UGV</Typography.Title>
@@ -47,14 +53,14 @@ export function SingleUGVPath(props: Props) {
                   type: 'scatter',
                   mode: 'lines+markers',
                   name:'Expected',
-                  x: [1, 2, 3 , 4],
-                  y: [2, 6, 3, 4],
+                  x: x_exp,
+                  y: y_exp,
                   line: {
                     color: 'rgb(100, 0, 0)',
                     width: lineSize
                   },
                   marker: {
-                    color: getExpMarkerColours(4),
+                    color: getExpMarkerColours(x_exp.length),
                     size: lineSize+10,
                     symbol: 'cross',
                     line:{
@@ -67,14 +73,14 @@ export function SingleUGVPath(props: Props) {
                 type: 'scatter',
                 mode: 'lines+markers',
                 name: 'Actual',
-                x: [1.1, 2.3, 2.9, 6],
-                y: [2.01, 5.8, 3.1, 5],
+                x,
+                y,
                 line: {
                   color: 'rgb(0, 0, 255)',
                   width: lineSize
                 },
                 marker: {
-                  color: getActMarkerColours(4),
+                  color: getActMarkerColours(x.length),
                   size: lineSize+10,
                   symbol: 'cross',
                   line:{

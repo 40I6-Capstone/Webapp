@@ -53,8 +53,6 @@ export function SingleUGVMenu() {
 
   const ws = useContext(WebsocketContext);
 
-  const [isSettingsOpen, setIsSettingsOpen] = React.useState(false);
-
   const ugvs = useAppSelector(selectUGVsAsDrop);
   const ugvId = useAppSelector(selectUGVId)
 
@@ -81,11 +79,12 @@ export function SingleUGVMenu() {
             <Select
               onChange={onSelect}
               options={ugvs}
+              defaultValue={ugvId}
             />
             <Button type="primary" onClick={onUGVGoClick} disabled={ugvId == null}>Start UGV</Button>
           </Space>
         </Row>
-        <Outlet context={[isSettingsOpen, setIsSettingsOpen]}/>
+        <Outlet />
       </Layout.Content>
     </Layout>
   );

@@ -2,12 +2,18 @@ import React, { useState } from 'react';
 import Plot from 'react-plotly.js';
 import { Typography } from 'antd';
 import { useAppSelector, useAppDispatch } from '../../app/hooks';
+import { selectUGVT, selectUGVV, selectUGVVExp } from './singleUGVSelector';
 
 interface Props {
   lineSize: number;
 }
 export function UGVVel(props: Props) {
   const { lineSize } = props;
+
+  const v = useAppSelector(selectUGVV);
+  const v_exp = useAppSelector(selectUGVVExp);
+  const t = useAppSelector(selectUGVT);
+
   return (
     <>
       <Typography.Title style={{marginBottom: '0px'}} level={4}>Velocity of UGV</Typography.Title>
@@ -18,8 +24,8 @@ export function UGVVel(props: Props) {
                   type: 'scatter',
                   mode: 'lines+markers',
                   name:'Expected',
-                  x: [1, 2, 3],
-                  y: [2, 6, 3],
+                  x: t,
+                  y: v_exp,
                   line: {
                     color: 'rgb(255, 0, 0)',
                     width: lineSize
@@ -29,8 +35,8 @@ export function UGVVel(props: Props) {
                 type: 'scatter',
                 mode: 'lines',
                 name: 'Actual',
-                x: [1.1, 2.3, 2.9],
-                y: [2.01, 5.8, 3.1],
+                x: t,
+                y: v,
                 line: {
                   color: 'rgb(0, 255, 255)',
                   width: lineSize
@@ -42,7 +48,7 @@ export function UGVVel(props: Props) {
             paper_bgcolor: 'rgba(0,0,0,0)',
             plot_bgcolor: 'rgba(0,0,0,0)',
             font: {color:'white'},
-            xaxis: {title: 'Time (s)'},
+            xaxis: {title: 'Time (ms)'},
             yaxis: {title: 'Velocity (m/s)'},   
             margin:{
               t: 0,

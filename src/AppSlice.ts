@@ -1,6 +1,7 @@
 import { createAsyncThunk, createSlice, PayloadAction } from '@reduxjs/toolkit';
 import { RootState, AppThunk } from './app/store';
 import {cloneDeep} from 'lodash';
+import { appendToPrevStates } from './features/SingleUGV/singleUGVSlice';
 
 export interface pos {
     x: number;
@@ -46,10 +47,16 @@ export const {
 export const handleMessage =
   (msgStr: string): AppThunk =>
   (dispatch, getState) => {
+    const state = getState();
     const msg = JSON.parse(msgStr);
     switch(msg.type) {
         case 'ugvAdded':
             dispatch(appendToUGVs(msg.data)); 
+            break;
+        case 'ugvData':
+            if(msg.data.id == state.singleUGV.id){
+              dispatch(appendToPrevStates(msg.data.data));
+            }
     }  
   };
 

@@ -7,35 +7,43 @@ interface pos {
   y: number;
 }
 
-interface data {
-  time: number,
-  posAct: pos,
-  posExp: pos,
-  v: number,
-  head: number,
-  motor?: {
-    r: {
-      v: number,
-      dist: number, 
-    },
-    l : {
-      v: number,
-      dist: number,
-    }
-  }
-};
-
 export interface UGVState {
+  x: number;
+  y: number;
+  velocity: number;
+  heading: number;
+  ts_ms: number;
+  x_exp: number;
+  y_exp: number;
+  velocity_exp: number;
+  heading_exp: number;
+}
+
+export interface DiagState {
+  ts_ms: number;
+  v_right: number;
+  d_right: number;
+  v_left: number;
+  d_left: number;
+  v_avg: number;
+  d_avg: number;
+}
+export interface UGVData {
   id: number|null;
-  posAct: pos[];
-  posExp: pos[];
+  prevStates: UGVState[];
+  diagPrevStates: DiagState[];
+  numOfStates: number;
+  numOfDiagStates: number;
 
 };
 
-const initialState: UGVState = {
+const initialState: UGVData = {
   id: null,
-  posAct: [],
-  posExp: [],
+  prevStates: [],
+  diagPrevStates: [],
+  numOfStates: 15,
+  numOfDiagStates: 15,
+  
 };
 
 
@@ -44,31 +52,62 @@ export const singleUGVSlice = createSlice({
   initialState,
   // The `reducers` field lets us define reducers and generate associated actions
   reducers: {
-    appendToData: (state, action: PayloadAction<data>) => {
-      const posAct = cloneDeep(state.posAct);
-      const posExp = cloneDeep(state.posExp);
-      
-      posAct.push(action.payload.posAct);
-      posExp.push(action.payload.posExp);
+    appendToPrevStates: (state, action: PayloadAction<UGVState>) => {
+      let prevStates = cloneDeep(state.prevStates);
+      prevStates.push(action.payload);
 
-      state.posAct = posAct;
-      state.posExp = posExp;
+      if(prevStates.length > state.numOfStates ){
+        prevStates = prevStates.slice(prevStates.length-state.numOfStates);
+      }
+
+      state.prevStates = prevStates;
     },
     switchUGV: (state, action: PayloadAction<number>) => {
       state.id = action.payload;
-    }
+    }, 
+    setNumOfState: (state, action: PayloadAction<number>) => {
+      if(state.numOfStates > action.payload ){
+        let prevStates = cloneDeep(state.prevStates);
+        prevStates = prevStates.slice(prevStates.length-action.payload);
+        state.prevStates = prevStates;
+      }
+      state.numOfStates = action.payload;
+    },
+    clearDataState: (state) => {
+      state.prevStates = [];
+    },
+    appendToDiagPrevStates: (state, action: PayloadAction<DiagState>) => {
+      let prevStates = cloneDeep(state.diagPrevStates); 
+      prevStates.push(action.payload);
+
+      if(prevStates.length > state.numOfDiagStates ){
+        prevStates = prevStates.slice(prevStates.length-state.numOfDiagStates);
+      }
+
+      state.diagPrevStates = prevStates;
+    },
+    setNumOfDiagState: (state, action: PayloadAction<number>) => {
+      if(state.numOfDiagStates > action.payload ){
+        let prevStates = cloneDeep(state.diagPrevStates);
+        prevStates = prevStates.slice(prevStates.length-action.payload);
+        state.diagPrevStates = prevStates;
+      }
+      state.numOfStates = action.payload;
+    },
+    clearDiagState: (state) => {
+      state.diagPrevStates = [];
+    },
   },
 });
 
 export const { 
-  appendToData,
+  appendToPrevStates,
   switchUGV,
+  setNumOfState,
+  clearDataState,
+  setNumOfDiagState,
+  clearDiagState
 } = singleUGVSlice.actions;
 
-export const incrementIfOdd =
-  (amount: number): AppThunk =>
-  (dispatch, getState) => {
-
-  };
 
 export default singleUGVSlice.reducer;
