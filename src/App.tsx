@@ -1,4 +1,5 @@
-import React, {useState, useEffect, useCallback} from 'react';
+import React, {useState, useEffect, useCallback, createContext, ReactNode} from 'react';
+import { useAppDispatch } from './app/hooks';
 import { Routes, Route, Link, useLocation } from 'react-router-dom';
 import useWebSocket from 'react-use-websocket';
 import MainPage from './features/MainPage/MainPage';
@@ -6,14 +7,16 @@ import SingleUGVMenu from './features/SingleUGV/SingleUGVMenu';
 import SingleUGVPage from './features/SingleUGV/SingleUGV';
 import UGVMotorVel from './features/SingleUGV/SingleUGVDiag/MotorVel';
 import UGVMotorDist from './features/SingleUGV/SingleUGVDiag/MotorDist';
+import { handleMessage } from './AppSlice';
 import './App.css';
-import { ConfigProvider, Col, Menu, theme, Layout, Button } from 'antd';
+import { ConfigProvider, Menu, theme, Layout } from 'antd';
 import type { MenuProps } from 'antd';
 import {
   DashboardOutlined,
   SubnodeOutlined,
 } from '@ant-design/icons';
-import { SelectInfo } from 'rc-menu/lib/interface';
+
+const socketUrl = 'ws://127.0.0.1:63733';
 
 const antdTheme = {
   algorithm: theme.darkAlgorithm,
@@ -44,24 +47,60 @@ const items: MenuProps['items'] = [
   }
 ]
 
-function App() {
+interface Props {
+  children: ReactNode;
+}
 
-  const location = useLocation();
-    
-  const [socketUrl, setSocketUrl] = useState('ws://127.0.0.1:63733');
-  const [messageHistory, setMessageHistory] = useState<any[]>([]);
+interface ws {
+  startUGV: (id: number) => void;
+  startUGVs: () => void;
 
+}
+export const WebsocketContext = createContext<ws|null>(null);
+
+
+function WebSocketProvider (props: Props) {
+  const {children} = props;
+
+  const dispatch = useAppDispatch();
   const { sendMessage, lastMessage, readyState } = useWebSocket(socketUrl);
-
 
   useEffect(() => {
     if (lastMessage !== null) {
-      setMessageHistory((prev) => prev.concat(lastMessage));
+      dispatch(handleMessage(lastMessage.data));
     }
 
-  }, [lastMessage, setMessageHistory]);
+  }, [dispatch, lastMessage]);
 
+  const ws = {
+    startUGV: (id: number) => {
+      const msg = {
+        type: 'start',
+        data: id
+      };
+      sendMessage(JSON.stringify(msg));
+    },
+    startUGVs: () => {
+      const msg = {
+        type: 'startAll',
+      };
+      sendMessage(JSON.stringify(msg));
+    },
+  };
 
+  return(
+    <WebsocketContext.Provider value={ws}>
+      {children}
+    </WebsocketContext.Provider>
+  )
+
+}
+
+function App() {
+
+  const location = useLocation();
+
+  const dispatch = useAppDispatch();
 
   return (
     <div className="App">
@@ -75,14 +114,16 @@ function App() {
             />
           </Layout.Header>
           <Layout.Content>
-            <Routes>
-              <Route path='/' element={<MainPage sendMessage={sendMessage}/>}/>
-              <Route path='ugv' element={<SingleUGVMenu sendMessage={sendMessage}/>}>
-                <Route path='state' element={<SingleUGVPage/>}/>
-                <Route path='diag/vel' element={<UGVMotorVel/>}/>
-                <Route path='diag/dist' element={<UGVMotorDist/>}/>
-              </Route>
-            </Routes>
+            <WebSocketProvider>
+              <Routes>
+                <Route path='/' element={<MainPage />}/>
+                <Route path='ugv' element={<SingleUGVMenu />}>
+                  <Route path='state' element={<SingleUGVPage/>}/>
+                  <Route path='diag/vel' element={<UGVMotorVel/>}/>
+                  <Route path='diag/dist' element={<UGVMotorDist/>}/>
+                </Route>
+              </Routes>
+            </WebSocketProvider>
           </Layout.Content>
         </Layout>
       </ConfigProvider>

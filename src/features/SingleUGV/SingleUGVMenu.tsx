@@ -1,18 +1,15 @@
-import React, { useState, useCallback } from 'react';
+import React, { useState, useCallback, useContext } from 'react';
 import { Outlet, Link, useLocation} from 'react-router-dom';
 import { useAppSelector, useAppDispatch } from '../../app/hooks';
 
 import { Layout, Menu, Row, Space, Button, Select, MenuProps } from 'antd';
-import { SettingOutlined, AimOutlined, HeartOutlined, DashboardOutlined, LineChartOutlined } from '@ant-design/icons'
-import { SendMessage } from 'react-use-websocket/dist/lib/types';
-
-import SingleUGVPath from './UGVPath';
-import UGVVel from './UGVV';
+import { AimOutlined, DashboardOutlined, LineChartOutlined } from '@ant-design/icons'
+import { selectUGVId } from './singleUGVSelector';
+import { selectUGVsAsDrop } from '../../AppSelector';
 import './SingleUGV.css';
+import { switchUGV } from './singleUGVSlice';
+import { WebsocketContext } from '../../App';
 
-interface mainPageProps {
-  sendMessage: SendMessage
-}
 
 interface ugvOption {
   value: number,
@@ -28,7 +25,6 @@ const items: MenuProps['items'] = [
   {
     key: "diag",
     label: "Motor Diagnostics",
-    // icon: (<HeartOutlined />),
     children: [
       {
         key: "vel",
@@ -50,23 +46,27 @@ function getLocationKey(path: string){
   return [pathArr[pathArr.length -1]];
 }
 
-export function SingleUGVMenu(props:mainPageProps) {
-  const { sendMessage } = props;
+export function SingleUGVMenu() {
 
+  const dispatch = useAppDispatch();
   const location = useLocation();
 
-  const [ugvId, setUgvId] = useState<number>();
-  const [options, setOptions] = useState<ugvOption[]>([{value: 0, label: "UGV 0"}, {value: 1, label: "UGV 1"}]);
+  const ws = useContext(WebsocketContext);
+
   const [isSettingsOpen, setIsSettingsOpen] = React.useState(false);
 
+  const ugvs = useAppSelector(selectUGVsAsDrop);
+  const ugvId = useAppSelector(selectUGVId)
 
   const onUGVGoClick = useCallback(()=>{
-    sendMessage(`Start UGV ${ugvId}`);
-  },[sendMessage, ugvId]);
+    if(ugvId == null) return;
+    ws?.startUGV(ugvId)
+
+  },[ws, ugvId]);
 
   const onSelect = useCallback((value: number)=>{
-    setUgvId(value);
-  },[setUgvId]);
+    if(value != ugvId) dispatch(switchUGV(value));
+  },[ugvId]);
 
 
 
@@ -80,9 +80,9 @@ export function SingleUGVMenu(props:mainPageProps) {
           <Space wrap>
             <Select
               onChange={onSelect}
-              options={options}
+              options={ugvs}
             />
-            <Button type="primary" onClick={onUGVGoClick}>Start UGV</Button>
+            <Button type="primary" onClick={onUGVGoClick} disabled={ugvId == null}>Start UGV</Button>
           </Space>
         </Row>
         <Outlet context={[isSettingsOpen, setIsSettingsOpen]}/>
