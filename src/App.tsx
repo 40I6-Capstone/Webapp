@@ -1,21 +1,25 @@
-import React, {useState, useEffect, useCallback, createContext, ReactNode} from 'react';
-import { useAppDispatch } from './app/hooks';
+import {useEffect, createContext, ReactNode} from 'react';
+import { useAppDispatch, useAppSelector, usePrevious } from './app/hooks';
 import { Routes, Route, Link, useLocation } from 'react-router-dom';
 import useWebSocket from 'react-use-websocket';
+import { without } from 'lodash';
+import { ConfigProvider, Menu, theme, Layout, message } from 'antd';
+import type { MenuProps } from 'antd';
+import {
+  DashboardOutlined,
+  SubnodeOutlined,
+} from '@ant-design/icons';
+
 import MainPage from './features/MainPage/MainPage';
 import SingleUGVMenu from './features/SingleUGV/SingleUGVMenu';
 import SingleUGVPage from './features/SingleUGV/SingleUGV';
 import UGVMotorDiag from './features/SingleUGV/SingleUGVDiag/MotorDiag';
 import UGVMotorVel from './features/SingleUGV/SingleUGVDiag/MotorVel';
 import UGVMotorDist from './features/SingleUGV/SingleUGVDiag/MotorDist';
+
 import { handleMessage } from './AppSlice';
+import { selectUGVs } from './AppSelector';
 import './App.css';
-import { ConfigProvider, Menu, theme, Layout } from 'antd';
-import type { MenuProps } from 'antd';
-import {
-  DashboardOutlined,
-  SubnodeOutlined,
-} from '@ant-design/icons';
 
 const socketUrl = 'ws://127.0.0.1:63733';
 
@@ -73,6 +77,7 @@ function WebSocketProvider (props: Props) {
 
   }, [dispatch, lastMessage]);
 
+
   const ws = {
     startUGV: (id: number) => {
       const msg = {
@@ -101,11 +106,27 @@ function App() {
 
   const location = useLocation();
 
-  const dispatch = useAppDispatch();
+  const [messageApi, contextHolder] = message.useMessage();
+
+  const ugvs = useAppSelector(selectUGVs);
+  const prevUgs = usePrevious(ugvs);
+
+  useEffect(() => {
+    if(ugvs.length > 0 && ugvs != prevUgs) {
+      const diff = without(ugvs, ...prevUgs);
+      console.log("ugvs updated", diff);
+      diff.forEach((ugv) => {
+        messageApi.info(`${ugv.name} has been connected`);
+      });
+      
+    }
+  },[ugvs, prevUgs]);
+
 
   return (
     <div className="App">
       <ConfigProvider theme={antdTheme}>
+        {contextHolder}
         <Layout>
           <Layout.Header style={{background: '#363d45'}}>
             <Menu 
