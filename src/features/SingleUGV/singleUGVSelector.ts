@@ -15,3 +15,11 @@ export const selectUGVV = (state: RootState) => map(state.singleUGV.prevStates, 
 export const selectUGVH = (state: RootState) => map(state.singleUGV.prevStates, 'heading');
 export const selectUGVVExp = (state: RootState) => map(state.singleUGV.prevStates, 'velocity_exp');
 export const selectUGVHExp = (state: RootState) => map(state.singleUGV.prevStates, 'heading_exp');
+
+export const selectMotorRVel = (state: RootState) => map(state.singleUGV.diagPrevStates, 'v_right');
+export const selectMotorLVel = (state: RootState) => map(state.singleUGV.diagPrevStates, 'v_left');
+export const selectMotorAvgVel = (state: RootState) => map(state.singleUGV.diagPrevStates, 'v_avg');
+export const selectMotorRDist = (state: RootState) => map(state.singleUGV.diagPrevStates, 'd_right');
+export const selectMotorLDist = (state: RootState) => map(state.singleUGV.diagPrevStates, 'd_left');
+export const selectMotorAvgDist = (state: RootState) => map(state.singleUGV.diagPrevStates, 'd_avg');
+export const selectMotorT = (state: RootState) => map(state.singleUGV.diagPrevStates, 'ts_ms');

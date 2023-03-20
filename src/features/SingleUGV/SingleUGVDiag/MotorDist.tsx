@@ -1,13 +1,16 @@
-import React, { useState } from 'react';
 import { useOutletContext } from 'react-router-dom';
 import Plot from 'react-plotly.js';
 import { useAppSelector, useAppDispatch } from '../../../app/hooks';
 
-
 import { Row, Col, Typography } from 'antd';
+import { selectMotorAvgDist, selectMotorLDist, selectMotorRDist, selectMotorT } from '../singleUGVSelector';
 
 export function UGVMotorDist() {
   const lineSize = useOutletContext<number>();
+  const d_right = useAppSelector(selectMotorRDist);
+  const d_left = useAppSelector(selectMotorLDist);
+  const d_avg = useAppSelector(selectMotorAvgDist);
+  const t = useAppSelector(selectMotorT);
 
   return (
     <>
@@ -21,8 +24,8 @@ export function UGVMotorDist() {
                   type: 'scatter',
                   mode: 'lines',
                   name: 'Average',
-                  x: [1.1, 2.3, 2.9],
-                  y: [2.01, 5.8, 3.1],
+                  x: d_avg,
+                  y: t,
                   line: {
                     color: 'rgb(255, 255, 255)',
                     width: lineSize
@@ -32,8 +35,8 @@ export function UGVMotorDist() {
                     type: 'scatter',
                     mode: 'lines+markers',
                     name:'Right Motor',
-                    x: [1, 2, 3],
-                    y: [2, 6, 3],
+                    x: d_right,
+                    y: t,
                     line: {
                       color: 'rgb(255, 0, 0)',
                       width: lineSize
@@ -43,8 +46,8 @@ export function UGVMotorDist() {
                   type: 'scatter',
                   mode: 'lines',
                   name: 'Left Motor',
-                  x: [1.1, 2.3, 2.9],
-                  y: [2.01, 5.8, 3.1],
+                  x: d_left,
+                  y: t,
                   line: {
                     color: 'rgb(0, 255, 255)',
                     width: lineSize

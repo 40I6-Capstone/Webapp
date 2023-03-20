@@ -3,11 +3,17 @@ import { useOutletContext } from 'react-router-dom';
 import Plot from 'react-plotly.js';
 import { useAppSelector, useAppDispatch } from '../../../app/hooks';
 
-
 import { Row, Col, Typography } from 'antd';
+import { selectMotorAvgVel, selectMotorLVel, selectMotorRVel, selectMotorT } from '../singleUGVSelector';
 
 export function UGVMotorVel() {
   const lineSize = useOutletContext<number>();
+
+  const v_right = useAppSelector(selectMotorRVel);
+  const v_left = useAppSelector(selectMotorLVel);
+  const v_avg = useAppSelector(selectMotorAvgVel);
+  const t = useAppSelector(selectMotorT);
+
 
   return (
     <>
@@ -21,8 +27,8 @@ export function UGVMotorVel() {
                   type: 'scatter',
                   mode: 'lines',
                   name: 'Average Velocity',
-                  x: [1.1, 2.3, 2.9],
-                  y: [2.01, 5.8, 3.1],
+                  x: v_avg,
+                  y: t,
                   line: {
                     color: 'rgb(255, 255, 255)',
                     width: lineSize
@@ -32,8 +38,8 @@ export function UGVMotorVel() {
                     type: 'scatter',
                     mode: 'lines+markers',
                     name:'Right Motor',
-                    x: [1, 2, 3],
-                    y: [2, 6, 3],
+                    x: v_right,
+                    y: t,
                     line: {
                       color: 'rgb(255, 0, 0)',
                       width: lineSize
@@ -43,8 +49,8 @@ export function UGVMotorVel() {
                   type: 'scatter',
                   mode: 'lines',
                   name: 'Left Motor',
-                  x: [1.1, 2.3, 2.9],
-                  y: [2.01, 5.8, 3.1],
+                  x: v_left,
+                  y: t,
                   line: {
                     color: 'rgb(0, 255, 255)',
                     width: lineSize
