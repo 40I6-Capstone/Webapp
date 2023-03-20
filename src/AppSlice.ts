@@ -2,6 +2,8 @@ import { createAsyncThunk, createSlice, PayloadAction } from '@reduxjs/toolkit';
 import { RootState, AppThunk } from './app/store';
 import {cloneDeep} from 'lodash';
 import { appendToPrevStates } from './features/SingleUGV/singleUGVSlice';
+import { updateShape, setPaths, updateState, updateLoading } from './features/Dashboard/dashboardSlice';
+import { map } from 'lodash';
 
 export interface pos {
     x: number;
@@ -9,14 +11,14 @@ export interface pos {
 }
 interface ugvData {
     id: number,
-    name: string
+    name: string,
+    state: string,
 }
 
 interface appState {
   ugvs: ugvData[];
 };
 
-export 
 
 const initialState: appState = {
   ugvs: [],
@@ -49,14 +51,21 @@ export const handleMessage =
   (dispatch, getState) => {
     const state = getState();
     const msg = JSON.parse(msgStr);
+    console.log("Got message", msg);
     switch(msg.type) {
+        case 'scout':
+          dispatch(updateShape({ vertices: msg.data.vertices, midpoints: msg.data.midpoints, contour: map(msg.data.contour,(a)=>a[0]) }));
+          dispatch(setPaths(msg.data.paths));
+          dispatch(updateState());
+          dispatch(updateLoading(false));
+          break;
         case 'ugvAdded':
-            dispatch(appendToUGVs(msg.data)); 
-            break;
+          dispatch(appendToUGVs(msg.data)); 
+          break;
         case 'ugvData':
-            if(msg.data.id == state.singleUGV.id){
-              dispatch(appendToPrevStates(msg.data.data));
-            }
+          if(msg.data.id == state.singleUGV.id){
+            dispatch(appendToPrevStates(msg.data.data));
+          }
     }  
   };
 

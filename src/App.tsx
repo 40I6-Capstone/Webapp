@@ -10,7 +10,7 @@ import {
   SubnodeOutlined,
 } from '@ant-design/icons';
 
-import MainPage from './features/MainPage/MainPage';
+import Dashboard from './features/Dashboard/Dashboard';
 import SingleUGVMenu from './features/SingleUGV/SingleUGVMenu';
 import SingleUGVPage from './features/SingleUGV/SingleUGV';
 import UGVMotorDiag from './features/SingleUGV/SingleUGVDiag/MotorDiag';
@@ -59,6 +59,7 @@ interface Props {
 interface ws {
   startUGV: (id: number) => void;
   startUGVs: () => void;
+  startScout: () => void;
 
 }
 export const WebsocketContext = createContext<ws|null>(null);
@@ -83,6 +84,12 @@ function WebSocketProvider (props: Props) {
       const msg = {
         type: 'start',
         data: id
+      };
+      sendMessage(JSON.stringify(msg));
+    },
+    startScout: () => {
+      const msg = {
+        type: 'scout',
       };
       sendMessage(JSON.stringify(msg));
     },
@@ -138,7 +145,7 @@ function App() {
           <Layout.Content>
             <WebSocketProvider>
               <Routes>
-                <Route path='/' element={<MainPage />}/>
+                <Route path='/' element={<Dashboard />}/>
                 <Route path='ugv' element={<SingleUGVMenu />}>
                   <Route path='state' element={<SingleUGVPage/>}/>
                   <Route path='diag' element={<UGVMotorDiag />}>

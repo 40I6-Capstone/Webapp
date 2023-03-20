@@ -1,10 +1,13 @@
 import { configureStore, ThunkAction, Action } from '@reduxjs/toolkit';
 import appReducer from '../AppSlice'
 import singleUGVReducer from '../features/SingleUGV/singleUGVSlice';
+import dashboardReducer from '../features/Dashboard/dashboardSlice';
+
 export const store = configureStore({
   reducer: {
     app: appReducer,
     singleUGV: singleUGVReducer,
+    dashboard: dashboardReducer,
   },
 });
 

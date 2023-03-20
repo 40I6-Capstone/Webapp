@@ -28,3 +28,8 @@ code {
   flex-grow: 2;
   width: 100%;
 }
+
+.ant-spin-nested-loading,.ant-spin-container {
+  height: 100%;
+}
+
