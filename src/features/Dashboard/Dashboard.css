@@ -1,9 +1,6 @@
 .ant-layout{
     height: 100%;
 }
-.ant-layout-sider{
+.dashboard-sider{
     padding: 10px;
-}
-#fullPathsPlot {
-    height: 97%;
 }

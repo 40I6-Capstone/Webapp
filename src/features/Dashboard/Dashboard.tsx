@@ -65,9 +65,11 @@ export function Dashboard() {
         <Spin spinning={loading}>
           <Layout>
             <Layout.Content>
+              <Row className='stretch-row'>
                 <PathsPlot />
+              </Row>
             </Layout.Content>
-            <Layout.Sider>
+            <Layout.Sider className='dashboard-sider'>
               <Button type="primary" onClick={onClick}>
                 {buttonText}
               </Button>
