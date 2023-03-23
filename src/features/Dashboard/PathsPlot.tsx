@@ -1,5 +1,5 @@
-import { Data } from 'plotly.js';
 import React, { useEffect, useState } from 'react';
+import { Data } from 'plotly.js';
 import Plot from 'react-plotly.js';
 import { useAppSelector, useAppDispatch } from '../../app/hooks';
 import { map } from 'lodash';
@@ -107,10 +107,11 @@ export function PathsPlot() {
           font: {color:'white'},
           xaxis: {title: 'X Position'},
           yaxis: {title: 'Y Position', scaleanchor: 'x', scaleratio: 1},
-          showlegend: false,
-                     
+          showlegend: false,     
         }}
-        
+        config={{
+          scrollZoom: true
+        }}
         useResizeHandler={true}
     />
   );
