@@ -105,6 +105,7 @@ export const {
   switchUGV,
   setNumOfState,
   clearDataState,
+  appendToDiagPrevStates,
   setNumOfDiagState,
   clearDiagState
 } = singleUGVSlice.actions;

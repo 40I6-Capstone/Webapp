@@ -1,7 +1,6 @@
 import React, { useState, useCallback, useContext, useEffect } from 'react';
 import { useAppSelector, useAppDispatch } from '../../app/hooks';
 import { Button, Layout, Row, Col, Spin } from 'antd';
-import { SendMessage } from 'react-use-websocket/dist/lib/types';
 import { WebsocketContext } from '../../App';
 import PathsPlot from './PathsPlot';
 
@@ -9,6 +8,8 @@ import './Dashboard.css'
 import { selectLoading, selectState } from './dashboardSelector';
 import { selectUGVs } from '../../AppSelector';
 import { updateLoading, updateState } from './dashboardSlice';
+import { JsxElement } from 'typescript';
+import UGVData from './ugvData';
 
 export function Dashboard() {
   const dispatch = useAppDispatch();
@@ -21,6 +22,7 @@ export function Dashboard() {
 
   const [buttonDisable, setButtonDisable] = useState<boolean>(false);
   const [buttonText, setButtonText] = useState<string>();
+  const [ugvDataElements, setUGVDataElements] = useState<JSX.Element[]>([]);
  
   const onClick = useCallback(()=>{
     switch(state) {
@@ -42,12 +44,6 @@ export function Dashboard() {
       case 'scouted':
         setButtonText('Start All UGVs');
         break;
-      case 'running':
-        setButtonText('Pause');
-        break;
-      case 'paused':
-        setButtonText('Continue');
-        break;
     }
   },[state, setButtonText]);
 
@@ -58,6 +54,12 @@ export function Dashboard() {
       setButtonDisable(ugvs.length === 0);
     }
   },[ugvs, state]);
+
+  useEffect(() => {
+    const ugvElement:JSX.Element[] = [];
+    ugvs.forEach((ugv) => ugvElement.push(<UGVData ugv={ugv}/>));  
+    setUGVDataElements(ugvElement);
+  }, [ugvs, setUGVDataElements]);
 
   return (
     <Row className='stretch-row'>
@@ -73,6 +75,7 @@ export function Dashboard() {
               <Button type="primary" onClick={onClick}>
                 {buttonText}
               </Button>
+              {ugvDataElements}
             </Layout.Sider>
           </Layout>
         </Spin>

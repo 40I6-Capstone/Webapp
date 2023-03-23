@@ -82,7 +82,7 @@ function WebSocketProvider (props: Props) {
   const ws = {
     startUGV: (id: number) => {
       const msg = {
-        type: 'start',
+        type: 'startSingle',
         data: id
       };
       sendMessage(JSON.stringify(msg));
@@ -96,6 +96,13 @@ function WebSocketProvider (props: Props) {
     startUGVs: () => {
       const msg = {
         type: 'startAll',
+      };
+      sendMessage(JSON.stringify(msg));
+    },
+    loadUGV: (id:number) => {
+      const msg = {
+        type: 'loadUGV',
+        data: id
       };
       sendMessage(JSON.stringify(msg));
     },
