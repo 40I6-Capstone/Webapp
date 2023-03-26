@@ -20,7 +20,6 @@ export function Dashboard() {
   const loading = useAppSelector(selectLoading);
   const ugvs = useAppSelector(selectUGVs);
 
-  const [buttonDisable, setButtonDisable] = useState<boolean>(false);
   const [buttonText, setButtonText] = useState<string>();
   const [ugvDataElements, setUGVDataElements] = useState<JSX.Element[]>([]);
  
@@ -42,18 +41,10 @@ export function Dashboard() {
         setButtonText('Scout Spill');
         break;
       case 'scouted':
-        setButtonText('Start All UGVs');
+        setButtonText('Reset setup');
         break;
     }
   },[state, setButtonText]);
-
-  useEffect(() => {
-    if(state !== 'scouted') {
-      setButtonDisable(false);
-    } else {
-      setButtonDisable(ugvs.length === 0);
-    }
-  },[ugvs, state]);
 
   useEffect(() => {
     const ugvElement:JSX.Element[] = [];

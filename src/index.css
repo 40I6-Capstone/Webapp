@@ -12,6 +12,10 @@ code {
     monospace;
 }
 
+h4 {
+  color: #00875a;
+}
+
 .stretch-row{
   height: 100%;
   flex-grow: 2;

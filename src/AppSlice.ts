@@ -5,6 +5,12 @@ import { appendToPrevStates, appendToDiagPrevStates } from './features/SingleUGV
 import { updateShape, setPaths, updateState, updateLoading, setNewUGV as setNewUGVDashboard, updateUGVPath } from './features/Dashboard/dashboardSlice';
 import { map } from 'lodash';
 
+export enum ugvState {
+  idle = "NODE_IDLE",
+  leave = "NODE_PATH_LEAVE",
+  return = "NODE_PATH_RETURN",
+}
+
 export interface pos {
     x: number;
     y: number;
@@ -52,7 +58,6 @@ export const handleMessage =
   (dispatch, getState) => {
     const state = getState();
     const msg = JSON.parse(msgStr);
-    console.log("Got message", msg);
     switch(msg.type) {
       case 'scout':
         dispatch(updateShape({ vertices: msg.data.vertices, midpoints: msg.data.midpoints, contour: map(msg.data.contour,(a)=>a[0]) }));
