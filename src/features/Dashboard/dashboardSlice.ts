@@ -70,6 +70,7 @@ export const dashboardSlice = createSlice({
     updateUGVPath: (state, action:PayloadAction<{id: number, path: number[]}>) => {
       const paths = cloneDeep(state.ugvPaths);
       paths[action.payload.id].push(action.payload.path);
+      state.ugvPaths = paths;
     }
   },
 })

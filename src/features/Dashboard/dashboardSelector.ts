@@ -12,3 +12,4 @@ export const selectContourX = (state: RootState) => map(state.dashboard.shape.co
 export const selectContourY = (state: RootState) => map(state.dashboard.shape.contour, (a) => a[1]);
 
 export const selectPaths = (state: RootState) => state.dashboard.paths;
+export const selectUgvPaths = (state: RootState) => state.dashboard.ugvPaths;

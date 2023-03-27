@@ -60,6 +60,8 @@ interface ws {
   startUGV: (id: number) => void;
   startUGVs: () => void;
   startScout: () => void;
+  giveUgvPath: (id: number) => void;
+  reconnectUav: () => void;
 
 }
 export const WebsocketContext = createContext<ws|null>(null);
@@ -99,10 +101,16 @@ function WebSocketProvider (props: Props) {
       };
       sendMessage(JSON.stringify(msg));
     },
-    loadUGV: (id:number) => {
+    giveUgvPath: (id:number) => {
       const msg = {
-        type: 'loadUGV',
+        type: 'giveUgvPath',
         data: id
+      };
+      sendMessage(JSON.stringify(msg));
+    },
+    reconnectUav: () => {
+      const msg = {
+        type: 'reconnectUav'
       };
       sendMessage(JSON.stringify(msg));
     },

@@ -1,8 +1,9 @@
 import React, { useEffect, useState } from 'react';
 import { Data } from 'plotly.js';
 import Plot from 'react-plotly.js';
+import { lime, green, cyan, blue, purple, magenta } from '@ant-design/colors'
 import { useAppSelector, useAppDispatch } from '../../app/hooks';
-import { map } from 'lodash';
+import { forEach, map } from 'lodash';
 import { 
   selectShapeMidX, 
   selectShapeMidY, 
@@ -10,8 +11,12 @@ import {
   selectShapeVertY, 
   selectContourX, 
   selectContourY, 
-  selectPaths
+  selectPaths,
+  selectUgvPaths
 } from './dashboardSelector';
+
+
+export const colourIndex = [lime, cyan, magenta, green, blue, purple];
 
 export function PathsPlot() {
   
@@ -22,8 +27,10 @@ export function PathsPlot() {
   const contourX = useAppSelector(selectContourX);
   const contourY = useAppSelector(selectContourY);
   const paths = useAppSelector(selectPaths);
+  const ugvPaths = useAppSelector(selectUgvPaths);
 
   const [pathData, setPathData] = useState<Data[]>([]);
+  const [ugvPathData, setUgvPathData] = useState<Data[]>([]);
 
   useEffect(() => {
     const pathData: Data[] = [];
@@ -44,6 +51,41 @@ export function PathsPlot() {
     setPathData(pathData)
 
   },[paths, setPathData]);
+
+  useEffect(() => {
+    const pathData: Data[] = [];
+    forEach(ugvPaths,((path, i) => {
+      if(path.length ==0) return;
+      pathData.push({
+        type: 'scatter',
+        mode: 'lines',
+        name:'shape',
+        x: map(path,(a: number[])=>a[0]),
+        y: map(path,(a: number[])=>a[1]),
+        line: {
+          color: colourIndex[Number(i)][7],
+          width: 2
+        },
+        hoverinfo: 'none',
+      });
+      pathData.push({
+        type: 'scatter',
+        mode: 'text+markers',
+        name:'shape',
+        x: [path[path.length - 1][0]],
+        y: [path[path.length - 1][1]],
+        text: `UGV ${i}`,
+        textposition:'top center',
+        marker: {
+          color: colourIndex[Number(i)].primary,
+          size: 10,
+        },
+        hoverinfo: 'x+y+text',
+      });
+    }));
+    setUgvPathData(pathData)
+
+  },[ugvPaths, setUgvPathData]);
 
   return (
     <Plot
@@ -98,7 +140,8 @@ export function PathsPlot() {
             },
             hoverinfo: 'none',
           },
-          ...pathData
+          ...pathData,
+          ...ugvPathData
         ]}
         layout={{
           autosize: true,

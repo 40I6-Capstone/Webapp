@@ -3,3 +3,4 @@ import { map } from 'lodash';
 
 export const selectUGVs = (state: RootState) => state.app.ugvs;
 export const selectUGVsAsDrop = (state: RootState) => map(state.app.ugvs, (o) => ({value: o.id, label: o.name}));
+export const selectUAV = (state:RootState) => state.app.uav;

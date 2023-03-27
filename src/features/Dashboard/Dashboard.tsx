@@ -1,4 +1,4 @@
-import React, { useState, useCallback, useContext, useEffect } from 'react';
+import { useState, useCallback, useContext, useEffect } from 'react';
 import { useAppSelector, useAppDispatch } from '../../app/hooks';
 import { Button, Layout, Row, Col, Spin } from 'antd';
 import { WebsocketContext } from '../../App';
@@ -10,6 +10,7 @@ import { selectUGVs } from '../../AppSelector';
 import { updateLoading, updateState } from './dashboardSlice';
 import { JsxElement } from 'typescript';
 import UGVData from './ugvData';
+import UAVData from './uavData';
 
 export function Dashboard() {
   const dispatch = useAppDispatch();
@@ -66,6 +67,7 @@ export function Dashboard() {
               <Button type="primary" onClick={onClick}>
                 {buttonText}
               </Button>
+              <UAVData />
               {ugvDataElements}
             </Layout.Sider>
           </Layout>
