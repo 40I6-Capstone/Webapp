@@ -29,9 +29,9 @@ export function UGVData(props:Props) {
     setShowLoad(ugv.state == ugvState.idle);
   }, [ugv, showLoad]);
 
-  const onUGVReady = useCallback(() => {
+  const onUGVReady = () => {
     ws?.giveUgvPath(ugv.id);
-  },[]);
+  }
 
   return (
     <div key={ugv.id}>

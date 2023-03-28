@@ -2,7 +2,7 @@ import {useEffect, createContext, ReactNode} from 'react';
 import { useAppDispatch, useAppSelector, usePrevious } from './app/hooks';
 import { Routes, Route, Link, useLocation } from 'react-router-dom';
 import useWebSocket from 'react-use-websocket';
-import { without } from 'lodash';
+import {  xorWith } from 'lodash';
 import { ConfigProvider, Menu, theme, Layout, message } from 'antd';
 import type { MenuProps } from 'antd';
 import {
@@ -134,13 +134,17 @@ function App() {
   const prevUgs = usePrevious(ugvs);
 
   useEffect(() => {
-    if(ugvs.length > 0 && ugvs != prevUgs) {
-      const diff = without(ugvs, ...prevUgs);
-      console.log("ugvs updated", diff);
+    if(ugvs.length > 0 && ugvs.length > prevUgs.length) {
+      const diff = xorWith(ugvs, prevUgs, (a, b)=>a.id === b.id);
       diff.forEach((ugv) => {
         messageApi.info(`${ugv.name} has been connected`);
       });
-      
+    }
+    if(ugvs.length > 0 && ugvs.length < prevUgs.length) {
+      const diff = xorWith(ugvs, prevUgs, (a, b)=>a.id === b.id);
+      diff.forEach((ugv) => {
+        messageApi.info(`${ugv.name} has been disconnected`);
+      });
     }
   },[ugvs, prevUgs]);
 
