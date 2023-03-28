@@ -28,7 +28,6 @@ export function Dashboard() {
     switch(state) {
       case 'idle':
         dispatch(updateLoading(true));
-        console.log("update loading");
         ws?.startScout();
         break;
       case 'scouted':
@@ -49,7 +48,7 @@ export function Dashboard() {
 
   useEffect(() => {
     const ugvElement:JSX.Element[] = [];
-    ugvs.forEach((ugv) => ugvElement.push(<UGVData ugv={ugv}/>));  
+    ugvs.forEach((ugv) => ugvElement.push(<UGVData ugv={ugv} key={ugv.id}/>));  
     setUGVDataElements(ugvElement);
   }, [ugvs, setUGVDataElements]);
 

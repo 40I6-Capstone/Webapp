@@ -11,5 +11,7 @@ export const selectShapeMidY = (state: RootState) => map(state.dashboard.shape.m
 export const selectContourX = (state: RootState) => map(state.dashboard.shape.contour, (a) => a[0]);
 export const selectContourY = (state: RootState) => map(state.dashboard.shape.contour, (a) => a[1]);
 
+export const selectImg = (state: RootState) => state.dashboard.img;
+
 export const selectPaths = (state: RootState) => state.dashboard.paths;
 export const selectUgvPaths = (state: RootState) => state.dashboard.ugvPaths;

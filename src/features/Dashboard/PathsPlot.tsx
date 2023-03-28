@@ -12,7 +12,8 @@ import {
   selectContourX, 
   selectContourY, 
   selectPaths,
-  selectUgvPaths
+  selectUgvPaths,
+  selectImg
 } from './dashboardSelector';
 
 
@@ -29,8 +30,11 @@ export function PathsPlot() {
   const paths = useAppSelector(selectPaths);
   const ugvPaths = useAppSelector(selectUgvPaths);
 
+  const img = useAppSelector(selectImg);
+
   const [pathData, setPathData] = useState<Data[]>([]);
   const [ugvPathData, setUgvPathData] = useState<Data[]>([]);
+  const [images, setImages] = useState<any[]>([]);
 
   useEffect(() => {
     const pathData: Data[] = [];
@@ -42,7 +46,7 @@ export function PathsPlot() {
         x: map(path,(a: number[])=>a[0]),
         y: map(path,(a: number[])=>a[1]),
         line: {
-          color: 'rgb(100, 0, 0)',
+          color: 'rgb(255, 0, 0)',
           width: 2
         },
         hoverinfo: 'none',
@@ -63,7 +67,7 @@ export function PathsPlot() {
         x: map(path,(a: number[])=>a[0]),
         y: map(path,(a: number[])=>a[1]),
         line: {
-          color: colourIndex[Number(i)][7],
+          color: colourIndex[Number(i)][6],
           width: 2
         },
         hoverinfo: 'none',
@@ -87,6 +91,23 @@ export function PathsPlot() {
 
   },[ugvPaths, setUgvPathData]);
 
+  useEffect(()=> {
+    if(img.src === '') return;
+    setImages([{
+      x: img.off[0],
+      y: img.off[1] + img.dim[1],
+      sizex: img.dim[0],
+      sizey: img.dim[1],
+      source: img.src,
+      xref: 'x',
+      yref: 'y',
+      layer: 'below',
+      sizing: 'stretch',
+      opacity: 0.5
+
+    }]);
+  },[img, setImages])
+
   return (
     <Plot
         divId="fullPathsPlot"
@@ -98,7 +119,7 @@ export function PathsPlot() {
             x: [0],
             y: [0],
             marker: {
-              color: 'rgb(100, 0, 0)',
+              color: 'rgb(255, 0, 0)',
               width: 5,
               symbol: 'cross',
 
@@ -112,7 +133,7 @@ export function PathsPlot() {
             x: shapeVertX,
             y: shapeVertY,
             line: {
-              color: 'rgb(100, 0, 0)',
+              color: 'rgb(255, 255, 0)',
               width: 2
             },
           },
@@ -123,7 +144,7 @@ export function PathsPlot() {
             x: shapeMidX,
             y: shapeMidY,
             marker: {
-              color: 'rgb(100, 100, 0)',
+              color: 'rgb(255, 255, 0)',
               width: 2
             },
             hoverinfo: 'none',
@@ -150,7 +171,8 @@ export function PathsPlot() {
           font: {color:'white'},
           xaxis: {title: 'X Position'},
           yaxis: {title: 'Y Position', scaleanchor: 'x', scaleratio: 1},
-          showlegend: false,     
+          showlegend: false, 
+          images,    
         }}
         config={{
           scrollZoom: true

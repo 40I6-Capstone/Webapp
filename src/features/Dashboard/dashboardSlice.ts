@@ -7,12 +7,20 @@ interface Shape {
   midpoints: number[][],
   contour: number[][],
 }
+
+interface ImgData {
+  src: string,
+  dim: number[],
+  off: number[],
+}
 interface DashboardState {
   state: string,
   loading: boolean,
   shape: Shape,
   paths: number[][][],
   ugvPaths: {[id: number]: number[][]},
+  ugvPlacedBooms: {[id: number]: number[][]},
+  img: ImgData,
 }
 
 const initialState:DashboardState = {
@@ -25,6 +33,12 @@ const initialState:DashboardState = {
   },
   paths: [],
   ugvPaths: [],
+  ugvPlacedBooms: [],
+  img: {
+    src: '',
+    dim:[0,0],
+    off:[0,0],
+  }
 }
 
 export const dashboardSlice = createSlice({
@@ -52,6 +66,9 @@ export const dashboardSlice = createSlice({
     updateShape: (state, action:PayloadAction<Shape>) => {
       state.shape = action.payload;
     },
+    updateImg: (state, action:PayloadAction<ImgData>) => {
+      state.img = action.payload;
+    },
     setPaths: (state, action:PayloadAction<number[][][]>) => {
       state.paths = action.payload;
     },
@@ -66,10 +83,30 @@ export const dashboardSlice = createSlice({
         };
       }
       state.ugvPaths = paths;
+      let placedBooms = cloneDeep(state.ugvPlacedBooms);
+      if(placedBooms[action.payload] != undefined) {
+        placedBooms[action.payload] = [];
+      } else {
+        placedBooms = {
+          ...placedBooms,
+          [action.payload]: [],
+        };
+      }
+      state.ugvPlacedBooms = placedBooms;
     },
     updateUGVPath: (state, action:PayloadAction<{id: number, path: number[]}>) => {
       const paths = cloneDeep(state.ugvPaths);
       paths[action.payload.id].push(action.payload.path);
+      state.ugvPaths = paths;
+    },
+    updateUgvPlaceBoom: (state, action:PayloadAction<{pathIndex: number, ugvId: number}>) => {
+      const placedBooms = cloneDeep(state.ugvPlacedBooms);
+      placedBooms[action.payload.ugvId].push(state.paths[action.payload.pathIndex].pop()??[0,0]);
+      state.ugvPlacedBooms = placedBooms;
+    },
+    clearUGVPath: (state, action:PayloadAction<number>) => {
+      const paths = cloneDeep(state.ugvPaths);
+      paths[action.payload] = [paths[action.payload][paths[action.payload].length-1]];
       state.ugvPaths = paths;
     }
   },
@@ -79,9 +116,12 @@ export const {
   updateState,
   updateLoading,
   updateShape,
+  updateImg,
   setPaths,
   setNewUGV,
-  updateUGVPath
+  updateUGVPath,
+  updateUgvPlaceBoom,
+  clearUGVPath
 } = dashboardSlice.actions
 
 

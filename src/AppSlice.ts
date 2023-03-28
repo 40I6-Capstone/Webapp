@@ -2,7 +2,7 @@ import { createAsyncThunk, createSlice, PayloadAction } from '@reduxjs/toolkit';
 import { RootState, AppThunk } from './app/store';
 import {cloneDeep} from 'lodash';
 import { appendToPrevStates, appendToDiagPrevStates } from './features/SingleUGV/singleUGVSlice';
-import { updateShape, setPaths, updateState, updateLoading, setNewUGV as setNewUGVDashboard, updateUGVPath } from './features/Dashboard/dashboardSlice';
+import { updateShape, setPaths, updateState, updateLoading, setNewUGV as setNewUGVDashboard, updateUGVPath, updateImg } from './features/Dashboard/dashboardSlice';
 import { map } from 'lodash';
 
 export enum ugvState {
@@ -99,17 +99,17 @@ export const handleMessage =
         dispatch(updateState());
         dispatch(updateLoading(false));
         break;
+      case 'imageUpdate':
+        dispatch(updateImg(msg.data));
+        break;
       case 'ugvAdded':
         dispatch(appendToUGVs(msg.data));
         dispatch(setNewUGVDashboard(msg.data.id)) 
         break;
       case 'ugvState':
-        // console.log(`${msg.data.id} ugv got state`, msg.data.data);
         const len = state.dashboard.ugvPaths[msg.data.id].length;
         if(len === 0 || (state.dashboard.ugvPaths[msg.data.id][len-1][0] !== msg.data.data.x && state.dashboard.ugvPaths[msg.data.id][len-1][1] !== msg.data.data.y ))
           dispatch(updateUGVPath({id: msg.data.id, path: [msg.data.data.x, msg.data.data.y]}));
-        console.log('curr state', state.app.ugvs[msg.data.id]);
-        console.log('new state', msg.data.data.State);
         if(state.app.ugvs[msg.data.id].state !== msg.data.data.State)
           dispatch(updateUGVState({id:msg.data.id, state:msg.data.data.State}));
         if(msg.data.id == state.singleUGV.id){

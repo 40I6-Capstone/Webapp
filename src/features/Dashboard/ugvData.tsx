@@ -1,8 +1,9 @@
 import { useCallback, useEffect, useState, useContext } from "react";
-import { useAppSelector, useAppDispatch } from '../../app/hooks';
+import { useAppSelector, useAppDispatch, usePrevious } from '../../app/hooks';
 import { WebsocketContext } from '../../App';
 import { UGVInfo, ugvState } from "../../AppSlice";
-import { ConfigProvider, Button, Divider, Typography } from "antd";
+import { clearUGVPath } from "./dashboardSlice";
+import { ConfigProvider, Button, Divider, Typography, Spin } from "antd";
 import { colourIndex } from "./PathsPlot";
 
 interface Props {
@@ -11,10 +12,14 @@ interface Props {
 
 export function UGVData(props:Props) {
   const { ugv } = props;
+  const dispatch = useAppDispatch();
+
+  const prevUgv = usePrevious(ugv)
 
   const ws = useContext(WebsocketContext);
 
   const [showLoad, setShowLoad] = useState<boolean>(false);
+  const [loadingPaths, setLoadingPaths] = useState<boolean>(false);
 
   const ugvTheme = {
     token:{
@@ -26,10 +31,20 @@ export function UGVData(props:Props) {
   };
 
   useEffect(() => {
+    if(!prevUgv) return;
+    if(ugv.state === ugvState.idle && prevUgv.state === ugvState.return) {
+      console.log(`returned ${ugv.id}`);
+      dispatch(clearUGVPath(ugv.id));
+    }
+  },[ugv, prevUgv]);
+
+  useEffect(() => {
     setShowLoad(ugv.state == ugvState.idle);
-  }, [ugv, showLoad]);
+    if(ugv.state === ugvState.leave) setLoadingPaths(false);
+  }, [ugv, setLoadingPaths, setShowLoad]);
 
   const onUGVReady = () => {
+    setLoadingPaths(true);
     ws?.giveUgvPath(ugv.id);
   }
 
@@ -39,9 +54,11 @@ export function UGVData(props:Props) {
         <Divider style={{borderColor: colourIndex[ugv.id].primary}}> {ugv.name} </Divider>
         <Typography.Paragraph strong >State: {ugv.state}</Typography.Paragraph>
         {showLoad &&(
-          <Button onClick={onUGVReady}>
-            UGV Ready To Go
-          </Button>
+          <Spin spinning={loadingPaths}>
+            <Button onClick={onUGVReady} key={ugv.id}>
+              UGV Ready To Go
+            </Button>
+          </Spin>
         )}
       </ConfigProvider>
     </div>
