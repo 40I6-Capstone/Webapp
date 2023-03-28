@@ -101,12 +101,12 @@ export const dashboardSlice = createSlice({
     },
     updateUgvPlaceBoom: (state, action:PayloadAction<{pathIndex: number, ugvId: number}>) => {
       const placedBooms = cloneDeep(state.ugvPlacedBooms);
-      placedBooms[action.payload.ugvId].push(state.paths[action.payload.pathIndex].pop()??[0,0]);
+      placedBooms[action.payload.ugvId].push(state.paths[action.payload.pathIndex][state.paths[action.payload.pathIndex].length-1]);
       state.ugvPlacedBooms = placedBooms;
     },
     clearUGVPath: (state, action:PayloadAction<number>) => {
       const paths = cloneDeep(state.ugvPaths);
-      paths[action.payload] = [paths[action.payload][paths[action.payload].length-1]];
+      paths[action.payload] = [paths[action.payload].pop()??[0,0]];
       state.ugvPaths = paths;
     }
   },

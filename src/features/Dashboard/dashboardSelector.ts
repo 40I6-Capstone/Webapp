@@ -15,3 +15,5 @@ export const selectImg = (state: RootState) => state.dashboard.img;
 
 export const selectPaths = (state: RootState) => state.dashboard.paths;
 export const selectUgvPaths = (state: RootState) => state.dashboard.ugvPaths;
+
+export const selectUgvPlacedBooms = (state: RootState) => state.dashboard.ugvPlacedBooms;

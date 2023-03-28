@@ -13,7 +13,8 @@ import {
   selectContourY, 
   selectPaths,
   selectUgvPaths,
-  selectImg
+  selectImg,
+  selectUgvPlacedBooms
 } from './dashboardSelector';
 
 
@@ -29,11 +30,13 @@ export function PathsPlot() {
   const contourY = useAppSelector(selectContourY);
   const paths = useAppSelector(selectPaths);
   const ugvPaths = useAppSelector(selectUgvPaths);
+  const ugvPlacedBooms = useAppSelector(selectUgvPlacedBooms);
 
   const img = useAppSelector(selectImg);
 
   const [pathData, setPathData] = useState<Data[]>([]);
   const [ugvPathData, setUgvPathData] = useState<Data[]>([]);
+  const [ugvPlacedBoomsData, setUgvPlacedBoomsData] = useState<Data[]>([]);
   const [images, setImages] = useState<any[]>([]);
 
   useEffect(() => {
@@ -90,6 +93,31 @@ export function PathsPlot() {
     setUgvPathData(pathData)
 
   },[ugvPaths, setUgvPathData]);
+
+  useEffect(() => {
+    const placedBooms: Data[] = [];
+    forEach(ugvPlacedBooms,((ugvBooms, i) => {
+      if(ugvBooms.length ==0) return;
+      pathData.push({
+        type: 'scatter',
+        mode: 'markers',
+        name:'boom',
+        x: map(ugvBooms,(a: number[])=>a[0]),
+        y: map(ugvBooms,(a: number[])=>a[1]),
+        marker: {
+          color: colourIndex[Number(i)][6],
+          size: 15,
+          symbol: 'asterisk',
+          line: {
+            color: colourIndex[Number(i)][6],
+            width: 3,
+          }
+        },
+      });
+    }));
+    setUgvPlacedBoomsData(placedBooms)
+
+  },[ugvPlacedBooms, setUgvPlacedBoomsData]);
 
   useEffect(()=> {
     if(img.src === '') return;
@@ -162,7 +190,8 @@ export function PathsPlot() {
             hoverinfo: 'none',
           },
           ...pathData,
-          ...ugvPathData
+          ...ugvPathData,
+          ...ugvPlacedBoomsData
         ]}
         layout={{
           autosize: true,
