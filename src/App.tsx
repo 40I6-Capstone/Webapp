@@ -3,13 +3,13 @@ import { useAppDispatch, useAppSelector, usePrevious } from './app/hooks';
 import { Routes, Route, Link, useLocation } from 'react-router-dom';
 import useWebSocket from 'react-use-websocket';
 import {  xorWith } from 'lodash';
-import { ConfigProvider, Menu, theme, Layout, message } from 'antd';
+import { ConfigProvider, Menu, theme, Layout, message, Row } from 'antd';
 import type { MenuProps } from 'antd';
 import {
   DashboardOutlined,
   SubnodeOutlined,
 } from '@ant-design/icons';
-
+import logo from './OilLockLogo.svg'
 import Dashboard from './features/Dashboard/Dashboard';
 import SingleUGVMenu from './features/SingleUGV/SingleUGVMenu';
 import SingleUGVPage from './features/SingleUGV/SingleUGV';
@@ -154,12 +154,15 @@ function App() {
       <ConfigProvider theme={antdTheme}>
         {contextHolder}
         <Layout>
-          <Layout.Header style={{background: '#363d45'}}>
-            <Menu 
-              defaultSelectedKeys={[location.pathname=='/'?'dashboard':'singleUGV']}
-              mode="horizontal" 
-              items={items} 
-            />
+          <Layout.Header style={{background: '#363d45', paddingInline: '0px'}}>
+            <Row style={{height: '100%'}}>
+              <img src={logo} style={{height: '100%', padding: '10px'}} className="App-logo" alt="logo" />
+              <Menu 
+                defaultSelectedKeys={[location.pathname=='/'?'dashboard':'singleUGV']}
+                mode="horizontal" 
+                items={items} 
+              />
+            </Row>
           </Layout.Header>
           <Layout.Content>
             <WebSocketProvider>

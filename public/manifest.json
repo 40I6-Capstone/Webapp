@@ -1,6 +1,6 @@
 {
-  "short_name": "React App",
-  "name": "Create React App Sample",
+  "short_name": "OilLock",
+  "name": "OilLock Dashboard and Controls",
   "icons": [
     {
       "src": "favicon.ico",
@@ -8,9 +8,14 @@
       "type": "image/x-icon"
     },
     {
-      "src": "logo192.png",
+      "src": "OilLockSmall.png",
+      "sizes": "64x64 32x32 24x24 16x16",
+      "type": "image/png"
+    },
+    {
+      "src": "OIlLockLogo.png",
       "type": "image/png",
-      "sizes": "192x192"
+      "sizes": "221x115"
     },
     {
       "src": "logo512.png",

@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useState, useContext } from "react";
+import { useCallback, useEffect, useContext } from "react";
 import { useAppSelector, usePrevious } from '../../app/hooks';
 import { WebsocketContext } from '../../App';
 import { selectUAV } from "../../AppSelector";
@@ -11,8 +11,6 @@ export function UAVData() {
 
   const uav = useAppSelector(selectUAV);
   
-  const [showLoad, setShowLoad] = useState<boolean>(false);
-
   const prevUav = usePrevious(uav);
 
   useEffect(() => {
@@ -22,7 +20,7 @@ export function UAVData() {
     } else if (uav.battery <= 10 && prevUav.battery > 10) {
         message.warning("UAV battery is critically low REPLACE NOW");
     }
-  }, [uav, prevUav, showLoad]);
+  }, [uav, prevUav]);
 
   const onUAVReconnect = useCallback(() => {
     ws?.reconnectUav();
@@ -31,7 +29,7 @@ export function UAVData() {
   return (
     <>
       <Divider> UAV </Divider>
-      <Typography.Paragraph strong type={uav.battery<20?'danger':undefined} >Battery: {uav.battery}</Typography.Paragraph>
+      <Typography.Paragraph strong type={uav.battery<20?'danger':undefined} >Battery: {uav.battery}%</Typography.Paragraph>
       <Typography.Paragraph strong type={uav.battery<20?'danger':undefined}>Status: {uav.state}</Typography.Paragraph>
       {
         uav.state === 'Disconnected' && (
