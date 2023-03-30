@@ -8,8 +8,9 @@ export const selectNumOfDiagStates = (state:RootState) => state.singleUGV.numOfD
 
 export const selectUGVX = (state: RootState) => map(state.singleUGV.prevStates, 'x');
 export const selectUGVY = (state: RootState) => map(state.singleUGV.prevStates, 'y');
-export const selectUGVXExp = (state: RootState) => map(state.singleUGV.prevStates, 'x_exp');
-export const selectUGVyExp = (state: RootState) => map(state.singleUGV.prevStates, 'y_exp');
+export const selectPath = (state: RootState) => state.singleUGV.path;
+export const selectPathX = (state: RootState) => map(state.singleUGV.path, (p)=>p[0]);
+export const selectPathY = (state: RootState) => map(state.singleUGV.path, (p)=>p[1]);
 export const selectUGVT = (state: RootState) => map(state.singleUGV.prevStates, 'ts_ms');
 export const selectUGVV = (state: RootState) => map(state.singleUGV.prevStates, 'velocity');
 export const selectUGVH = (state: RootState) => map(state.singleUGV.prevStates, 'heading');

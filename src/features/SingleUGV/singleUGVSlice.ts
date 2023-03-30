@@ -13,8 +13,6 @@ export interface UGVState {
   velocity: number;
   heading: number;
   ts_ms: number;
-  x_exp: number;
-  y_exp: number;
   velocity_exp: number;
   heading_exp: number;
 }
@@ -34,6 +32,7 @@ export interface UGVData {
   diagPrevStates: DiagState[];
   numOfStates: number;
   numOfDiagStates: number;
+  path: number[][];
 
 };
 
@@ -43,6 +42,7 @@ const initialState: UGVData = {
   diagPrevStates: [],
   numOfStates: 15,
   numOfDiagStates: 15,
+  path: [],
   
 };
 
@@ -61,6 +61,9 @@ export const singleUGVSlice = createSlice({
       }
 
       state.prevStates = prevStates;
+    },
+    updatePath:(state, action: PayloadAction<number[][]>) => {
+      state.path = action.payload;
     },
     switchUGV: (state, action: PayloadAction<number>) => {
       state.id = action.payload;
@@ -103,6 +106,7 @@ export const singleUGVSlice = createSlice({
 export const { 
   appendToPrevStates,
   switchUGV,
+  updatePath,
   setNumOfState,
   clearDataState,
   appendToDiagPrevStates,

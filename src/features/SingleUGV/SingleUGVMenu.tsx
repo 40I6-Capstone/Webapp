@@ -2,12 +2,14 @@ import React, { useState, useCallback, useContext } from 'react';
 import { Outlet, Link, useLocation} from 'react-router-dom';
 import { useAppSelector, useAppDispatch } from '../../app/hooks';
 
-import { Layout, Menu, Row, Space, Button, Select, MenuProps } from 'antd';
-import { AimOutlined, DashboardOutlined, LineChartOutlined } from '@ant-design/icons'
+import { Layout, Menu, Row, Space, Button, Select, MenuProps, Upload, message } from 'antd';
+import type { UploadProps } from 'antd';
+import { AimOutlined, DashboardOutlined, LineChartOutlined, UploadOutlined } from '@ant-design/icons'
 import { selectUGVId } from './singleUGVSelector';
 import { selectUGVsAsDrop } from '../../AppSelector';
 import './SingleUGV.css';
-import { switchUGV } from './singleUGVSlice';
+import { selectPath } from './singleUGVSelector';
+import { switchUGV, updatePath } from './singleUGVSlice';
 import { WebsocketContext } from '../../App';
 
 
@@ -54,13 +56,33 @@ export function SingleUGVMenu() {
   const ws = useContext(WebsocketContext);
 
   const ugvs = useAppSelector(selectUGVsAsDrop);
-  const ugvId = useAppSelector(selectUGVId)
+  const ugvId = useAppSelector(selectUGVId);
+  const path = useAppSelector(selectPath);
 
   const onUGVGoClick = useCallback(()=>{
     if(ugvId == null) return;
-    ws?.startUGV(ugvId)
+    ws?.startUGV(ugvId, path)
 
   },[ws, ugvId]);
+
+  const props: UploadProps = {
+    beforeUpload: async (file) => {
+      console.log(file.type);
+      const isCSV = ['text/csv', 'text/x-csv', 'application/vnd.ms-excel', 'application/csv', 'application/x-csv'].includes(file.type);
+      if (!isCSV) {
+        message.error(`${file.name} is not a csv file`);
+        return Upload.LIST_IGNORE;
+      }
+      const str = await file.text();
+      const path = str.split("\r\n").filter((line) => line.match(/^(\d|\.)*,(\d|\.)*$/)).map(function (line) {
+          const strVals = line.split(",");
+          return [Number(strVals[0]), Number(strVals[1])];
+      });
+      console.log(path);
+      dispatch(updatePath(path))
+      return Upload.LIST_IGNORE; 
+    },
+  };
 
   const onSelect = useCallback((value: number)=>{
     if(value != ugvId) dispatch(switchUGV(value));
@@ -81,6 +103,9 @@ export function SingleUGVMenu() {
               options={ugvs}
               defaultValue={ugvId}
             />
+            <Upload {...props}>
+              <Button icon={<UploadOutlined />}>Upload Paths</Button>
+            </Upload>
             <Button type="primary" onClick={onUGVGoClick} disabled={ugvId == null}>Start UGV</Button>
           </Space>
         </Row>

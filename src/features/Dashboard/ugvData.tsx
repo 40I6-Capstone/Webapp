@@ -52,6 +52,7 @@ export function UGVData(props:Props) {
     <div key={ugv.id}>
       <ConfigProvider theme={ugvTheme}>
         <Divider style={{borderColor: colourIndex[ugv.id].primary}}> {ugv.name} </Divider>
+        <Typography.Paragraph >Port: {ugv.port}</Typography.Paragraph>
         <Typography.Paragraph strong >State: {ugv.state}</Typography.Paragraph>
         {showLoad &&(
           <Spin spinning={loadingPaths}>

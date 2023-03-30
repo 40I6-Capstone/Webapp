@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import Plot from 'react-plotly.js';
 import { Typography, Row, Col } from 'antd';
-import { selectUGVX, selectUGVXExp, selectUGVY, selectUGVyExp } from './singleUGVSelector';
+import { selectUGVX, selectPathX, selectUGVY, selectPathY } from './singleUGVSelector';
 import { useAppSelector, useAppDispatch } from '../../app/hooks';
 
 interface Props {
@@ -40,8 +40,8 @@ export function SingleUGVPath(props: Props) {
 
   const x = useAppSelector(selectUGVX);
   const y = useAppSelector(selectUGVY);
-  const x_exp = useAppSelector(selectUGVXExp);
-  const y_exp = useAppSelector(selectUGVyExp);
+  const x_exp = useAppSelector(selectPathX);
+  const y_exp = useAppSelector(selectPathY);
 
   return (
     <Col span={24} className='fill-col'>

@@ -19,6 +19,7 @@ export interface pos {
 export interface UGVInfo {
     id: number,
     name: string,
+    port: string,
     state: string,
 }
 

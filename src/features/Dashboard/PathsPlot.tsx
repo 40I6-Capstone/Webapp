@@ -198,14 +198,24 @@ export function PathsPlot() {
           paper_bgcolor: 'rgba(0,0,0,0)',
           plot_bgcolor: 'rgba(0,0,0,0)',
           font: {color:'white'},
-          xaxis: {title: 'X Position'},
-          yaxis: {title: 'Y Position', scaleanchor: 'x', scaleratio: 1},
+          xaxis: {
+            title: 'X Position',
+            showgrid: false,
+            showline: true
+          },
+          yaxis: {
+            title: 'Y Position',
+            scaleanchor: 'x',
+            scaleratio: 1,
+            showgrid: false,
+            showline: true
+          },
           showlegend: false, 
           images,    
         }}
-        config={{
-          scrollZoom: true
-        }}
+        // config={{
+        //   scrollZoom: true
+        // }}
         useResizeHandler={true}
     />
   );

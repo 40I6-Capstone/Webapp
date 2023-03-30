@@ -57,7 +57,7 @@ interface Props {
 }
 
 interface ws {
-  startUGV: (id: number) => void;
+  startUGV: (id: number, path: number[][]) => void;
   startUGVs: () => void;
   startScout: () => void;
   giveUgvPath: (id: number) => void;
@@ -82,10 +82,14 @@ function WebSocketProvider (props: Props) {
 
 
   const ws = {
-    startUGV: (id: number) => {
+    startUGV: (id: number, path: number[][]) => {
       const msg = {
         type: 'startSingle',
-        data: id
+        data: {
+          id: id, 
+          path: path,
+        },
+
       };
       sendMessage(JSON.stringify(msg));
     },
