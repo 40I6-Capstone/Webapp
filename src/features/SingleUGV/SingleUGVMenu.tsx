@@ -63,7 +63,7 @@ export function SingleUGVMenu() {
     if(ugvId == null) return;
     ws?.startUGV(ugvId, path)
 
-  },[ws, ugvId]);
+  },[ws, ugvId, path]);
 
   const props: UploadProps = {
     beforeUpload: async (file) => {
