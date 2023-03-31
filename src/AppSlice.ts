@@ -2,7 +2,7 @@ import { createAsyncThunk, createSlice, PayloadAction } from '@reduxjs/toolkit';
 import { RootState, AppThunk } from './app/store';
 import {cloneDeep} from 'lodash';
 import { appendToPrevStates, appendToDiagPrevStates } from './features/SingleUGV/singleUGVSlice';
-import { updateShape, setPaths, updateState, updateLoading, setNewUGV as setNewUGVDashboard, updateUGVPath, updateImg, updateUgvPlaceBoom } from './features/Dashboard/dashboardSlice';
+import { updateShape, setPaths, updateState, updateLoading, setNewUGV as setNewUGVDashboard, updateUGVPath, updateImg, updateUgvPlaceBoom, ugvDonePath } from './features/Dashboard/dashboardSlice';
 import { map } from 'lodash';
 
 export enum ugvState {
@@ -118,7 +118,11 @@ export const handleMessage =
         }
         break;
       case 'ugvPlaceBoom':
+        console.log('place boom');
         dispatch(updateUgvPlaceBoom(msg.data));
+        break;
+      case 'ugvDonePath':
+        dispatch(ugvDonePath(msg.data));
         break;
       case 'ugvDiagState':
         if(msg.data.id == state.singleUGV.id){

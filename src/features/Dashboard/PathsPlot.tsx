@@ -98,7 +98,7 @@ export function PathsPlot() {
     const placedBooms: Data[] = [];
     forEach(ugvPlacedBooms,((ugvBooms, i) => {
       if(ugvBooms.length ==0) return;
-      pathData.push({
+      placedBooms.push({
         type: 'scatter',
         mode: 'markers',
         name:'boom',

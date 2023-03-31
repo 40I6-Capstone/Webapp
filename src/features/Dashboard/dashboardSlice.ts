@@ -100,15 +100,20 @@ export const dashboardSlice = createSlice({
       state.ugvPaths = paths;
     },
     updateUgvPlaceBoom: (state, action:PayloadAction<{pathIndex: number, ugvId: number}>) => {
+      const point = cloneDeep(state.paths[action.payload.pathIndex][state.paths[action.payload.pathIndex].length-1])
       const placedBooms = cloneDeep(state.ugvPlacedBooms);
-      placedBooms[action.payload.ugvId].push(state.paths[action.payload.pathIndex][state.paths[action.payload.pathIndex].length-1]);
+      placedBooms[action.payload.ugvId].push(point);
       state.ugvPlacedBooms = placedBooms;
     },
-    clearUGVPath: (state, action:PayloadAction<number>) => {
-      const paths = cloneDeep(state.ugvPaths);
-      paths[action.payload] = [paths[action.payload].pop()??[0,0]];
-      state.ugvPaths = paths;
-    }
+    ugvDonePath: (state, action:PayloadAction<{pathIndex: number, ugvId: number}>) => {
+      const ugvPaths = cloneDeep(state.ugvPaths);
+      ugvPaths[action.payload.ugvId] = [ugvPaths[action.payload.ugvId].pop()??[0,0]];
+      state.ugvPaths = ugvPaths;
+
+      const paths = cloneDeep(state.paths);
+      paths[action.payload.pathIndex] = [];
+      state.paths = paths;
+    },
   },
 })
 
@@ -121,7 +126,7 @@ export const {
   setNewUGV,
   updateUGVPath,
   updateUgvPlaceBoom,
-  clearUGVPath
+  ugvDonePath
 } = dashboardSlice.actions
 
 

@@ -1,4 +1,3 @@
-import React, { useState } from 'react';
 import Plot from 'react-plotly.js';
 import { Typography, Row, Col } from 'antd';
 import { selectUGVX, selectPathX, selectUGVY, selectPathY } from './singleUGVSelector';

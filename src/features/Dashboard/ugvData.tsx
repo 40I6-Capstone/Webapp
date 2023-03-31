@@ -1,8 +1,7 @@
-import { useCallback, useEffect, useState, useContext } from "react";
-import { useAppSelector, useAppDispatch, usePrevious } from '../../app/hooks';
+import { useEffect, useState, useContext } from "react";
+import { useAppDispatch } from '../../app/hooks';
 import { WebsocketContext } from '../../App';
 import { UGVInfo, ugvState } from "../../AppSlice";
-import { clearUGVPath } from "./dashboardSlice";
 import { ConfigProvider, Button, Divider, Typography, Spin } from "antd";
 import { colourIndex } from "./PathsPlot";
 
@@ -13,8 +12,6 @@ interface Props {
 export function UGVData(props:Props) {
   const { ugv } = props;
   const dispatch = useAppDispatch();
-
-  const prevUgv = usePrevious(ugv)
 
   const ws = useContext(WebsocketContext);
 
@@ -29,14 +26,6 @@ export function UGVData(props:Props) {
       borderRadius: 3
     },
   };
-
-  useEffect(() => {
-    if(!prevUgv) return;
-    if(ugv.state === ugvState.idle && prevUgv.state === ugvState.return) {
-      console.log(`returned ${ugv.id}`);
-      dispatch(clearUGVPath(ugv.id));
-    }
-  },[ugv, prevUgv]);
 
   useEffect(() => {
     setShowLoad(ugv.state == ugvState.idle);
