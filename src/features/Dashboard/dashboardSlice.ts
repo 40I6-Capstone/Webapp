@@ -114,6 +114,11 @@ export const dashboardSlice = createSlice({
       paths[action.payload.pathIndex] = [];
       state.paths = paths;
     },
+    removeUgv: (state, action: PayloadAction<number>) => {
+      const ugvPaths = cloneDeep(state.ugvPaths);
+      ugvPaths[action.payload] = [];
+      state.ugvPaths = ugvPaths;
+    },
   },
 })
 
@@ -126,7 +131,8 @@ export const {
   setNewUGV,
   updateUGVPath,
   updateUgvPlaceBoom,
-  ugvDonePath
+  ugvDonePath,
+  removeUgv
 } = dashboardSlice.actions
 
 
