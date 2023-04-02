@@ -1,7 +1,7 @@
 import Plot from 'react-plotly.js';
 import { Typography, Row, Col } from 'antd';
 import { selectUGVX, selectPathX, selectUGVY, selectPathY } from './singleUGVSelector';
-import { useAppSelector, useAppDispatch } from '../../app/hooks';
+import { useAppSelector } from '../../app/hooks';
 
 interface Props {
   lineSize: number;

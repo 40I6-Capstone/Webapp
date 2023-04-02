@@ -1,5 +1,4 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit'
-import { RootState, AppThunk } from '../../app/store';
 import { cloneDeep } from 'lodash';
 
 interface Shape {
@@ -74,7 +73,7 @@ export const dashboardSlice = createSlice({
     },
     setNewUGV: (state, action:PayloadAction<number>) => {
       let paths = cloneDeep(state.ugvPaths);
-      if(paths[action.payload] != undefined) {
+      if(paths[action.payload] !== undefined) {
         paths[action.payload] = [];
       } else {
         paths = {
@@ -84,7 +83,7 @@ export const dashboardSlice = createSlice({
       }
       state.ugvPaths = paths;
       let placedBooms = cloneDeep(state.ugvPlacedBooms);
-      if(placedBooms[action.payload] != undefined) {
+      if(placedBooms[action.payload] !== undefined) {
         placedBooms[action.payload] = [];
       } else {
         placedBooms = {

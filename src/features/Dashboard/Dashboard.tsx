@@ -7,8 +7,7 @@ import PathsPlot from './PathsPlot';
 import './Dashboard.css'
 import { selectLoading, selectState } from './dashboardSelector';
 import { selectUGVs } from '../../AppSelector';
-import { updateLoading, updateState } from './dashboardSlice';
-import { JsxElement } from 'typescript';
+import { updateLoading } from './dashboardSlice';
 import UGVData from './ugvData';
 import UAVData from './uavData';
 
@@ -34,7 +33,7 @@ export function Dashboard() {
       case 'scouted':
         ws?.startUGVs();
     }
-  },[ws, numOfUgvs]);
+  },[ws, numOfUgvs, state, dispatch]);
 
   const onNumOfUgvsChange = (value: number|null)=> {
     if (!value) return;

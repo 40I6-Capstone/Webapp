@@ -30,7 +30,7 @@ export function UGVData(props:Props) {
   };
 
   useEffect(() => {
-    setShowLoad(ugv.state == ugvState.idle);
+    setShowLoad(ugv.state === ugvState.idle);
     if(ugv.state === ugvState.leave) setLoadingPaths(false);
   }, [ugv, setLoadingPaths, setShowLoad]);
 
@@ -43,7 +43,7 @@ export function UGVData(props:Props) {
     setIsTaken(true);
     ws?.takeUgv(ugv.id);
     dispatch(removeUgv(ugv.id));
-  },[ugv]);
+  },[dispatch, ugv.id, ws]);
 
   return (
     <div key={ugv.id}>

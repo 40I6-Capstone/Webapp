@@ -72,7 +72,7 @@ function WebSocketProvider (props: Props) {
   const {children} = props;
 
   const dispatch = useAppDispatch();
-  const { sendMessage, lastMessage, readyState } = useWebSocket(socketUrl);
+  const { sendMessage, lastMessage } = useWebSocket(socketUrl);
 
   useEffect(() => {
     if (lastMessage !== null) {
@@ -159,7 +159,7 @@ function App() {
         messageApi.info(`${ugv.name} has been disconnected`);
       });
     }
-  },[ugvs, prevUgs]);
+  },[ugvs, prevUgs, messageApi]);
 
 
   return (
@@ -171,7 +171,7 @@ function App() {
             <Row style={{height: '100%'}}>
               <img src={logo} style={{height: '100%', padding: '10px'}} className="App-logo" alt="logo" />
               <Menu 
-                defaultSelectedKeys={[location.pathname=='/'?'dashboard':'singleUGV']}
+                defaultSelectedKeys={[location.pathname==='/'?'dashboard':'singleUGV']}
                 mode="horizontal" 
                 items={items} 
               />

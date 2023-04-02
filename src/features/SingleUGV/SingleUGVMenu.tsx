@@ -1,4 +1,4 @@
-import React, { useState, useCallback, useContext } from 'react';
+import { useCallback, useContext } from 'react';
 import { Outlet, Link, useLocation} from 'react-router-dom';
 import { useAppSelector, useAppDispatch } from '../../app/hooks';
 
@@ -11,12 +11,6 @@ import './SingleUGV.css';
 import { selectPath } from './singleUGVSelector';
 import { switchUGV, updatePath } from './singleUGVSlice';
 import { WebsocketContext } from '../../App';
-
-
-interface ugvOption {
-  value: number,
-  label: string,
-}
 
 const items: MenuProps['items'] = [
   {
@@ -60,7 +54,7 @@ export function SingleUGVMenu() {
   const path = useAppSelector(selectPath);
 
   const onUGVGoClick = useCallback(()=>{
-    if(ugvId == null) return;
+    if(ugvId === null) return;
     ws?.startUGV(ugvId, path)
 
   },[ws, ugvId, path]);
@@ -83,8 +77,8 @@ export function SingleUGVMenu() {
   };
 
   const onSelect = useCallback((value: number)=>{
-    if(value != ugvId) dispatch(switchUGV(value));
-  },[ugvId]);
+    if(value !== ugvId) dispatch(switchUGV(value));
+  },[dispatch, ugvId]);
 
 
 
@@ -104,7 +98,7 @@ export function SingleUGVMenu() {
             <Upload {...props}>
               <Button icon={<UploadOutlined />}>Upload Paths</Button>
             </Upload>
-            <Button type="primary" onClick={onUGVGoClick} disabled={ugvId == null}>Start UGV</Button>
+            <Button type="primary" onClick={onUGVGoClick} disabled={ugvId === null}>Start UGV</Button>
           </Space>
         </Row>
         <Outlet />

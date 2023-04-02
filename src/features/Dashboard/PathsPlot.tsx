@@ -1,8 +1,8 @@
-import React, { useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { Data } from 'plotly.js';
 import Plot from 'react-plotly.js';
 import { lime, green, cyan, blue, purple, magenta } from '@ant-design/colors'
-import { useAppSelector, useAppDispatch } from '../../app/hooks';
+import { useAppSelector } from '../../app/hooks';
 import { forEach, map } from 'lodash';
 import { 
   selectShapeMidX, 
@@ -62,7 +62,7 @@ export function PathsPlot() {
   useEffect(() => {
     const pathData: Data[] = [];
     forEach(ugvPaths,((path, i) => {
-      if(path.length ==0) return;
+      if(path.length === 0) return;
       pathData.push({
         type: 'scatter',
         mode: 'lines',
@@ -97,7 +97,7 @@ export function PathsPlot() {
   useEffect(() => {
     const placedBooms: Data[] = [];
     forEach(ugvPlacedBooms,((ugvBooms, i) => {
-      if(ugvBooms.length ==0) return;
+      if(ugvBooms.length === 0) return;
       placedBooms.push({
         type: 'scatter',
         mode: 'markers',
