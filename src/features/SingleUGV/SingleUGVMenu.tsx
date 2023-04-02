@@ -67,7 +67,6 @@ export function SingleUGVMenu() {
 
   const props: UploadProps = {
     beforeUpload: async (file) => {
-      console.log(file.type);
       const isCSV = ['text/csv', 'text/x-csv', 'application/vnd.ms-excel', 'application/csv', 'application/x-csv'].includes(file.type);
       if (!isCSV) {
         message.error(`${file.name} is not a csv file`);
@@ -78,7 +77,6 @@ export function SingleUGVMenu() {
           const strVals = line.split(",");
           return [Number(strVals[0]), Number(strVals[1])];
       });
-      console.log(path);
       dispatch(updatePath(path))
       return Upload.LIST_IGNORE; 
     },

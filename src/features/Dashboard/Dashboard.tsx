@@ -1,6 +1,6 @@
 import { useState, useCallback, useContext, useEffect } from 'react';
 import { useAppSelector, useAppDispatch } from '../../app/hooks';
-import { Button, Layout, Row, Col, Spin } from 'antd';
+import { Button, Layout, Row, Col, Spin, InputNumber, Typography } from 'antd';
 import { WebsocketContext } from '../../App';
 import PathsPlot from './PathsPlot';
 
@@ -21,30 +21,37 @@ export function Dashboard() {
   const loading = useAppSelector(selectLoading);
   const ugvs = useAppSelector(selectUGVs);
 
-  const [buttonText, setButtonText] = useState<string>();
+  const [isIdle, setIsIdle] = useState<boolean>();
   const [ugvDataElements, setUGVDataElements] = useState<JSX.Element[]>([]);
+  const [numOfUgvs, setNumOfUgvs] = useState<number>(1);
  
   const onClick = useCallback(()=>{
     switch(state) {
       case 'idle':
         dispatch(updateLoading(true));
-        ws?.startScout();
+        ws?.startScout(numOfUgvs);
         break;
       case 'scouted':
         ws?.startUGVs();
     }
-  },[ws]);
+  },[ws, numOfUgvs]);
+
+  const onNumOfUgvsChange = (value: number|null)=> {
+    if (!value) return;
+    setNumOfUgvs(value);
+  };
+
 
   useEffect(() => {
     switch(state) {
       case 'idle':
-        setButtonText('Scout Spill');
+        setIsIdle(true);
         break;
       case 'scouted':
-        setButtonText('Reset setup');
+        setIsIdle(false);
         break;
     }
-  },[state, setButtonText]);
+  },[state, setIsIdle]);
 
   useEffect(() => {
     const ugvElement:JSX.Element[] = [];
@@ -63,9 +70,17 @@ export function Dashboard() {
               </Row>
             </Layout.Content>
             <Layout.Sider className='dashboard-sider'>
-              <Button type="primary" onClick={onClick}>
-                {buttonText}
-              </Button>
+                <Button type="primary" onClick={onClick} style={{width: '100%'}}>
+                  {isIdle?'Scout Spill':'Reset setup'}
+                </Button>
+              <Row style={{margin: '10px 0px'}}>
+                { isIdle && (
+                  <>
+                    <Typography.Paragraph>Number of UGVs to Deploy:</Typography.Paragraph>
+                    <InputNumber min={1} defaultValue={numOfUgvs} onChange={onNumOfUgvsChange}/>
+                  </>
+                )}
+              </Row>
               <UAVData />
               {ugvDataElements}
             </Layout.Sider>

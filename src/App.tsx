@@ -59,7 +59,7 @@ interface Props {
 interface ws {
   startUGV: (id: number, path: number[][]) => void;
   startUGVs: () => void;
-  startScout: () => void;
+  startScout: (numOfUgvs: number) => void;
   giveUgvPath: (id: number) => void;
   reconnectUav: () => void;
 
@@ -93,9 +93,10 @@ function WebSocketProvider (props: Props) {
       };
       sendMessage(JSON.stringify(msg));
     },
-    startScout: () => {
+    startScout: (numOfUgvs: number) => {
       const msg = {
         type: 'scout',
+        data: numOfUgvs,
       };
       sendMessage(JSON.stringify(msg));
     },

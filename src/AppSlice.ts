@@ -9,6 +9,7 @@ export enum ugvState {
   idle = "NODE_IDLE",
   leave = "NODE_PATH_LEAVE",
   return = "NODE_PATH_RETURN",
+  done = "NODE_DONE",
 }
 
 export interface pos {
@@ -118,7 +119,6 @@ export const handleMessage =
         }
         break;
       case 'ugvPlaceBoom':
-        console.log('place boom');
         dispatch(updateUgvPlaceBoom(msg.data));
         break;
       case 'ugvDonePath':
