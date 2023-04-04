@@ -24,7 +24,7 @@ export function UAVData() {
 
   const onUAVReconnect = useCallback(() => {
     ws?.reconnectUav();
-  },[]);
+  },[ws]);
   
   return (
     <>

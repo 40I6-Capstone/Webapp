@@ -22,7 +22,7 @@ export function Dashboard() {
 
   const [isIdle, setIsIdle] = useState<boolean>();
   const [ugvDataElements, setUGVDataElements] = useState<JSX.Element[]>([]);
-  const [numOfUgvs, setNumOfUgvs] = useState<number>(1);
+  const [numOfUgvs, setNumOfUgvs] = useState<number>(2);
  
   const onClick = useCallback(()=>{
     switch(state) {

@@ -58,6 +58,7 @@ interface Props {
 
 interface ws {
   startUGV: (id: number, path: number[][]) => void;
+  stopUGV: (id: number) => void;
   startUGVs: () => void;
   startScout: (numOfUgvs: number) => void;
   giveUgvPath: (id: number) => void;
@@ -91,6 +92,13 @@ function WebSocketProvider (props: Props) {
           path: path,
         },
 
+      };
+      sendMessage(JSON.stringify(msg));
+    },
+    stopUGV: (id: number) => {
+      const msg = {
+        type: 'stopSingle',
+        data: id, 
       };
       sendMessage(JSON.stringify(msg));
     },

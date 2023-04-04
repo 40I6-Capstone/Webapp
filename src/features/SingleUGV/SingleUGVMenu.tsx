@@ -1,4 +1,4 @@
-import { useCallback, useContext } from 'react';
+import { useCallback, useContext, useState } from 'react';
 import { Outlet, Link, useLocation} from 'react-router-dom';
 import { useAppSelector, useAppDispatch } from '../../app/hooks';
 
@@ -53,11 +53,19 @@ export function SingleUGVMenu() {
   const ugvId = useAppSelector(selectUGVId);
   const path = useAppSelector(selectPath);
 
-  const onUGVGoClick = useCallback(()=>{
-    if(ugvId === null) return;
-    ws?.startUGV(ugvId, path)
+  const [ ugvStarted, setUgvStarted ] = useState<boolean>(false);
 
-  },[ws, ugvId, path]);
+  const onUGVGoClick = useCallback(()=>{
+    if(ugvId === null || !ws) return;
+    if(ugvStarted){
+      ws.stopUGV(ugvId);
+      setUgvStarted(false);
+    } else {
+      ws.startUGV(ugvId, path)
+      setUgvStarted(true);
+    }
+
+  },[ws, ugvId, path, ugvStarted, setUgvStarted]);
 
   const props: UploadProps = {
     beforeUpload: async (file) => {
@@ -98,7 +106,7 @@ export function SingleUGVMenu() {
             <Upload {...props}>
               <Button icon={<UploadOutlined />}>Upload Paths</Button>
             </Upload>
-            <Button type="primary" onClick={onUGVGoClick} disabled={ugvId === null}>Start UGV</Button>
+            <Button type="primary" onClick={onUGVGoClick} disabled={ugvId === null}>{ugvStarted?'Stop Ugv':'Start UGV'}</Button>
           </Space>
         </Row>
         <Outlet />
